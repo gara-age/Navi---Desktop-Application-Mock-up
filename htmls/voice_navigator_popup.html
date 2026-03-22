@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Voice Navigator — 팝업 테스터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#e8eef5;
+  --panel:#ffffff;
+  --panel2:#f5f8fc;
+  --border:rgba(30,90,180,.14);
+  --border-strong:rgba(30,90,180,.28);
+  --text:#0f1f35;
+  --muted:#3a5270;
+  --dim:#6b87a8;
+  --accent:#1565c0;
+  --success:#1b7d3e;
+  --warn:#b45c00;
+  --danger:#c0392b;
+  --purple:#5e35b1;
+  --font:'Noto Sans KR',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --taskbar-h:48px;
+  --popup-w:360px;
+}
+
+/* ════ 팝업 테마 변형 — 배경이 아닌 팝업 자체에 적용 ════ */
+
+/* 다크 팝업 */
+.vn-popup.theme-dark{
+  background:linear-gradient(135deg,#0f1f35,#1a2d45) !important;
+  border:1px solid rgba(87,184,255,.35) !important;
+  box-shadow:0 8px 32px rgba(0,0,0,.55), 0 0 0 1px rgba(87,184,255,.15) !important;
+}
+.vn-popup.theme-dark .popup-title{color:#edf4ff;font-weight:800;}
+.vn-popup.theme-dark .popup-sub{color:rgba(200,220,255,.75);}
+.vn-popup.theme-dark::after{background:rgba(87,184,255,.35);}
+.vn-popup.theme-dark .popup-close{background:rgba(87,184,255,.15);color:#edf4ff;}
+.vn-popup.theme-dark .popup-close:hover{background:rgba(87,184,255,.3);}
+
+/* 고대비 팝업 */
+.vn-popup.theme-contrast{
+  background:#000033 !important;
+  border:3px solid #ffffff !important;
+  box-shadow:0 0 0 5px #000033, 0 8px 24px rgba(0,0,0,.7) !important;
+  border-radius:14px !important;
+}
+.vn-popup.theme-contrast .popup-title{
+  color:#ffffff;font-size:16px;font-weight:900;letter-spacing:.01em;
+}
+.vn-popup.theme-contrast .popup-sub{
+  color:#ccddff;font-size:13px;font-weight:700;
+}
+.vn-popup.theme-contrast::after{background:#ffffff;height:4px;}
+.vn-popup.theme-contrast .popup-close{
+  background:rgba(255,255,255,.2);color:#ffffff;
+  border:1.5px solid rgba(255,255,255,.5);
+  font-weight:900;
+}
+.vn-popup.theme-contrast .popup-close:hover{background:rgba(255,255,255,.4);}
+.vn-popup.theme-contrast .popup-icon{font-size:26px;}
+
+/* 큰 글씨 팝업 */
+.vn-popup.font-large{
+  padding:18px 20px;
+  border-radius:20px;
+}
+.vn-popup.font-large .popup-icon{font-size:28px;}
+.vn-popup.font-large .popup-title{font-size:17px;font-weight:900;line-height:1.4;}
+.vn-popup.font-large .popup-sub{font-size:14px;margin-top:5px;}
+.vn-popup.font-large .popup-close{width:28px;height:28px;font-size:16px;border-radius:8px;}
+
+/* 조합: 고대비 + 큰글씨 */
+.vn-popup.theme-contrast.font-large .popup-title{font-size:19px;}
+.vn-popup.theme-contrast.font-large .popup-sub{font-size:15px;}
+
+
+/* ── 테마 설정 바 ── */
+.theme-bar{
+  width:min(780px,100%);
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border-strong);
+  border-radius:14px;
+  padding:14px 20px;
+  box-shadow:0 4px 16px rgba(15,31,53,.08);
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.theme-bar-label{
+  font-size:11px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;
+  color:var(--dim);white-space:nowrap;flex:0 0 auto;
+}
+.theme-toggle-group{display:flex;gap:8px;flex-wrap:wrap;}
+.theme-toggle-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:10px;
+  border:1.5px solid var(--border-strong);
+  background:var(--panel2);
+  color:var(--muted);
+  font-size:12px;font-weight:800;
+  cursor:pointer;transition:.14s;
+  font-family:var(--font);
+  user-select:none;
+}
+.theme-toggle-btn:hover{
+  border-color:rgba(21,101,192,.45);
+  background:rgba(21,101,192,.07);
+  color:var(--accent);
+}
+.theme-toggle-btn.active{
+  background:rgba(21,101,192,.12);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+.ttb-icon{font-size:16px;line-height:1;}
+.ttb-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--border-strong);
+  transition:.14s;flex:0 0 auto;
+}
+.theme-toggle-btn.active .ttb-dot{background:var(--accent);}
+html.theme-contrast .theme-toggle-btn.active .ttb-dot{background:#fff;}
+
+/* ── 작업표시줄 ── */
+#taskbar{
+  position:fixed;bottom:0;left:0;right:0;
+  height:var(--taskbar-h);
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(20px);
+  border-top:1px solid var(--border-strong);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;
+  box-shadow:0 -4px 20px rgba(15,31,53,.08);
+  z-index:100;
+}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-start{
+  width:36px;height:36px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,#1a73e8,#1565c0);
+  color:#fff;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(21,101,192,.30);
+}
+.tb-app{
+  display:flex;align-items:center;gap:7px;
+  padding:5px 10px;border-radius:8px;
+  border:1px solid var(--border);background:rgba(21,101,192,.06);
+  font-size:12px;font-weight:700;color:var(--accent);cursor:pointer;
+}
+.tb-app-dot{width:7px;height:7px;border-radius:50%;background:#1b7d3e;box-shadow:0 0 6px rgba(27,125,62,.6)}
+.tb-center{
+  position:absolute;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:12px;color:var(--dim);
+}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-icons{display:flex;gap:6px;font-size:15px;opacity:.7}
+.tb-clock{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--muted)}
+
+/* ── 팝업 알림 ── */
+#popup-container{
+  position:fixed;
+  bottom:calc(var(--taskbar-h) + 12px);
+  right:16px;
+  display:flex;flex-direction:column-reverse;gap:8px;
+  align-items:flex-end;
+  z-index:9999;
+  pointer-events:none;
+  width:var(--popup-w);
+}
+
+.vn-popup{
+  width:var(--popup-w);
+  border-radius:16px;
+  padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+  pointer-events:all;
+  box-shadow:0 8px 32px rgba(15,31,53,.18), 0 2px 8px rgba(15,31,53,.10);
+  animation:popIn .28s cubic-bezier(.34,1.56,.64,1) forwards;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.35);
+}
+.vn-popup.hiding{animation:popOut .22s ease-in forwards}
+
+@keyframes popIn{
+  from{opacity:0;transform:translateX(24px) scale(.95)}
+  to{opacity:1;transform:translateX(0) scale(1)}
+}
+@keyframes popOut{
+  from{opacity:1;transform:translateX(0) scale(1)}
+  to{opacity:0;transform:translateX(20px) scale(.96)}
+}
+
+/* 팝업 내부 진행바 */
+.vn-popup::after{
+  content:'';
+  position:absolute;bottom:0;left:0;
+  height:3px;
+  background:rgba(255,255,255,.45);
+  animation:progress var(--dur,3s) linear forwards;
+  border-radius:0 0 0 16px;
+}
+@keyframes progress{from{width:100%}to{width:0%}}
+
+.popup-icon{font-size:22px;flex:0 0 auto;line-height:1}
+.popup-body{flex:1;min-width:0}
+.popup-title{font-size:14px;font-weight:800;line-height:1.3}
+.popup-sub{font-size:11px;margin-top:3px;opacity:.78;line-height:1.4}
+.popup-close{
+  width:24px;height:24px;border-radius:6px;border:none;
+  background:rgba(255,255,255,.25);
+  color:inherit;font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex:0 0 auto;opacity:.75;transition:.12s;font-family:var(--font);
+}
+.popup-close:hover{opacity:1;background:rgba(255,255,255,.4)}
+
+/* 팝업 타입별 색상 */
+.popup-info{
+  background:linear-gradient(135deg,#1565c0,#1a73e8);color:#fff;
+}
+.popup-success{
+  background:linear-gradient(135deg,#1b7d3e,#2e9e56);color:#fff;
+}
+.popup-warn{
+  background:linear-gradient(135deg,#b45c00,#d97706);color:#fff;
+}
+.popup-danger{
+  background:linear-gradient(135deg,#c0392b,#e53935);color:#fff;
+}
+.popup-secure{
+  background:linear-gradient(135deg,#5e35b1,#7c4dcc);color:#fff;
+}
+.popup-custom{color:#fff;}
+
+/* 힌트 텍스트 */
+#hint{
+  font-size:11px;color:var(--dim);text-align:center;
+  padding:4px 0;
+}
+</style>
+</head>
+<body>
+
+<div id="desktop">
+  <div id="control-panel">
+
+    <!-- 좌: 프리셋 -->
+    <div class="cp-section">
+      <div class="cp-title">프리셋 알림</div>
+      <div class="preset-grid">
+
+        <button class="preset-btn type-info"
+          onclick="firePopup('🎙','음성을 듣고 있습니다','말씀하세요','info')">
+          <span class="pb-icon">🎙</span>
+          <span class="pb-label">음성 수신 중</span>
+          <span class="pb-type">INFO</span>
+        </button>
+
+        <button class="preset-btn type-info"
+          onclick="firePopup('⚙️','작업을 처리하고 있습니다','잠시만 기다려 주세요','info')">
+          <span class="pb-icon">⚙️</span>
+          <span class="pb-label">작업 처리 중</span>
+          <span class="pb-type">INFO</span>
+        </button>
+
+        <button class="preset-btn type-success"
+          onclick="firePopup('✅','작업이 완료되었습니다','결과를 읽어드립니다','success')">
+          <span class="pb-icon">✅</span>
+          <span class="pb-label">작업 완료</span>
+          <span class="pb-type">OK</span>
+        </button>
+
+        <button class="preset-btn type-success"
+          onclick="firePopup('🔊','음성 안내를 시작합니다','스피커를 확인하세요','success')">
+          <span class="pb-icon">🔊</span>
+          <span class="pb-label">음성 안내 시작</span>
+          <span class="pb-type">OK</span>
+        </button>
+
+        <button class="preset-btn type-warn"
+          onclick="firePopup('⏳','잠시 후 다시 시도해주세요','서버 응답이 지연되고 있습니다','warn')">
+          <span class="pb-icon">⏳</span>
+          <span class="pb-label">재시도 요청</span>
+          <span class="pb-type">WARN</span>
+        </button>
+
+        <button class="preset-btn type-warn"
+          onclick="firePopup('📶','네트워크를 확인해주세요','인터넷 연결이 불안정합니다','warn')">
+          <span class="pb-icon">📶</span>
+          <span class="pb-label">네트워크 오류</span>
+          <span class="pb-type">WARN</span>
+        </button>
+
+        <button class="preset-btn type-danger"
+          onclick="firePopup('🚫','명령을 인식하지 못했습니다','다시 말씀해 주세요','danger')">
+          <span class="pb-icon">🚫</span>
+          <span class="pb-label">인식 실패</span>
+          <span class="pb-type">ERR</span>
+        </button>
+
+        <button class="preset-btn type-danger"
+          onclick="firePopup('❌','오류가 발생했습니다','프로그램을 재시작해주세요','danger')">
+          <span class="pb-icon">❌</span>
+          <span class="pb-label">시스템 오류</span>
+          <span class="pb-type">ERR</span>
+        </button>
+
+        <button class="preset-btn type-secure"
+          onclick="firePopup('🔒','보안 모드 동작 중','민감 정보 보호가 활성화되었습니다','secure')">
+          <span class="pb-icon">🔒</span>
+          <span class="pb-label">보안 모드 ON</span>
+          <span class="pb-type">SEC</span>
+        </button>
+
+        <button class="preset-btn type-info"
+          onclick="firePopup('👁','화면을 분석하고 있습니다','현재 UI를 읽어드립니다','info')">
+          <span class="pb-icon">👁</span>
+          <span class="pb-label">화면 읽기</span>
+          <span class="pb-type">INFO</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- 우: 커스텀 -->
+    <div class="cp-section">
+      <div class="cp-title">커스텀 알림 만들기</div>
+      <div class="custom-area">
+
+        <!-- 아이콘 -->
+        <div class="custom-row">
+          <span class="custom-label">아이콘</span>
+          <div class="icon-row" id="icon-group">
+            <button class="icon-btn active" data-icon="💬" onclick="selectIcon(this)">💬</button>
+            <button class="icon-btn" data-icon="🎙" onclick="selectIcon(this)">🎙</button>
+            <button class="icon-btn" data-icon="🔒" onclick="selectIcon(this)">🔒</button>
+            <button class="icon-btn" data-icon="⚙️" onclick="selectIcon(this)">⚙️</button>
+            <button class="icon-btn" data-icon="✅" onclick="selectIcon(this)">✅</button>
+            <button class="icon-btn" data-icon="⚠️" onclick="selectIcon(this)">⚠️</button>
+            <button class="icon-btn" data-icon="❌" onclick="selectIcon(this)">❌</button>
+            <button class="icon-btn" data-icon="📶" onclick="selectIcon(this)">📶</button>
+            <button class="icon-btn" data-icon="👁" onclick="selectIcon(this)">👁</button>
+            <button class="icon-btn" data-icon="🔊" onclick="selectIcon(this)">🔊</button>
+          </div>
+        </div>
+
+        <!-- 본문 텍스트 -->
+        <div class="custom-row">
+          <span class="custom-label">제목</span>
+          <input id="custom-text" type="text" placeholder="예: 음성을 듣고 있습니다" value="음성을 듣고 있습니다">
+        </div>
+
+        <!-- 부제목 -->
+        <div class="custom-row">
+          <span class="custom-label">부제목</span>
+          <input id="custom-sub" type="text" placeholder="예: 말씀하세요 (생략 가능)">
+        </div>
+
+        <!-- 배경 색상 -->
+        <div class="custom-row">
+          <span class="custom-label">색상</span>
+          <div class="color-row" id="color-group">
+            <div class="color-swatch active" data-color="#1565c0"
+              style="background:linear-gradient(135deg,#1565c0,#1a73e8)"
+              onclick="selectColor(this)" title="파랑 (정보)"></div>
+            <div class="color-swatch" data-color="#1b7d3e"
+              style="background:linear-gradient(135deg,#1b7d3e,#2e9e56)"
+              onclick="selectColor(this)" title="초록 (성공)"></div>
+            <div class="color-swatch" data-color="#b45c00"
+              style="background:linear-gradient(135deg,#b45c00,#d97706)"
+              onclick="selectColor(this)" title="주황 (경고)"></div>
+            <div class="color-swatch" data-color="#c0392b"
+              style="background:linear-gradient(135deg,#c0392b,#e53935)"
+              onclick="selectColor(this)" title="빨강 (오류)"></div>
+            <div class="color-swatch" data-color="#5e35b1"
+              style="background:linear-gradient(135deg,#5e35b1,#7c4dcc)"
+              onclick="selectColor(this)" title="보라 (보안)"></div>
+            <div class="color-swatch" data-color="#0f5d6b"
+              style="background:linear-gradient(135deg,#0f5d6b,#0097a7)"
+              onclick="selectColor(this)" title="청록 (특수)"></div>
+            <!-- 직접 지정 -->
+            <input type="color" id="custom-color-picker" value="#1565c0"
+              oninput="onPickerChange(this)" title="직접 선택">
+          </div>
+        </div>
+
+        <!-- 표시 시간 -->
+        <div class="custom-row">
+          <span class="custom-label">시간</span>
+          <div class="duration-row" style="flex:1">
+            <input type="range" id="duration-slider" min="1" max="10" value="3"
+              oninput="document.getElementById('duration-val').textContent=this.value+'초'">
+            <span id="duration-val">3초</span>
+          </div>
+        </div>
+
+        <button id="fire-btn" onclick="fireCustomPopup()">▶ 팝업 표시</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 테마 설정 바 -->
+  <div class="theme-bar">
+    <span class="theme-bar-label">팝업 테마</span>
+    <div class="theme-toggle-group">
+      <button class="theme-toggle-btn" id="btn-dark" onclick="toggleTheme('dark')">
+        <span class="ttb-icon">🌙</span> 다크 테마 <span class="ttb-dot"></span>
+      </button>
+      <button class="theme-toggle-btn" id="btn-contrast" onclick="toggleTheme('contrast')">
+        <span class="ttb-icon">⬛</span> 고대비 <span class="ttb-dot"></span>
+      </button>
+      <button class="theme-toggle-btn" id="btn-font" onclick="toggleFontSize()">
+        <span class="ttb-icon">🔤</span> 큰 글씨 <span class="ttb-dot"></span>
+      </button>
+    </div>
+    <span style="font-size:11px;color:var(--dim);margin-left:auto;" id="theme-state-label">라이트 · 기본 크기</span>
+  </div>
+
+  <div id="hint">팝업은 작업표시줄 우측 하단에 표시됩니다 · 최대 3개 동시 표시 · 클릭하거나 시간이 지나면 사라집니다</div>
+</div>
+
+<!-- 팝업 컨테이너 -->
+<div id="popup-container"></div>
+
+<!-- 작업표시줄 -->
+<div id="taskbar">
+  <div class="tb-left">
+    <button class="tb-start" title="시작">⊞</button>
+    <div class="tb-app">
+      <span class="tb-app-dot"></span>
+      Voice Navigator
+    </div>
+  </div>
+  <div class="tb-center" id="tb-clock">--:--</div>
+  <div class="tb-right">
+    <div class="tb-icons">📶 🔊 🔋</div>
+    <div class="tb-clock" id="tb-clock2">--:--:--</div>
+  </div>
+</div>
+
+<script>
+
+/* ════ 팝업 테마 상태 — html이 아닌 팝업 자체에 클래스 적용 ════ */
+const themeState = { dark: false, contrast: false, largeFont: false };
+
+function toggleTheme(mode){
+  if(mode === 'dark'){
+    themeState.dark = !themeState.dark;
+    if(themeState.dark) themeState.contrast = false;
+    document.getElementById('btn-dark').classList.toggle('active', themeState.dark);
+    document.getElementById('btn-contrast').classList.remove('active');
+  } else if(mode === 'contrast'){
+    themeState.contrast = !themeState.contrast;
+    if(themeState.contrast) themeState.dark = false;
+    document.getElementById('btn-contrast').classList.toggle('active', themeState.contrast);
+    document.getElementById('btn-dark').classList.remove('active');
+  }
+  updateThemeLabel();
+}
+
+function toggleFontSize(){
+  themeState.largeFont = !themeState.largeFont;
+  document.getElementById('btn-font').classList.toggle('active', themeState.largeFont);
+  updateThemeLabel();
+}
+
+function updateThemeLabel(){
+  const t = themeState.contrast ? '고대비' : themeState.dark ? '다크' : '라이트';
+  const f = themeState.largeFont ? '· 큰 글씨' : '· 기본 크기';
+  const el = document.getElementById('theme-state-label');
+  if(el) el.textContent = t + ' ' + f;
+}
+
+/* 현재 테마 클래스 목록 반환 */
+function getPopupThemeClasses(){
+  const cls = [];
+  if(themeState.dark)     cls.push('theme-dark');
+  if(themeState.contrast) cls.push('theme-contrast');
+  if(themeState.largeFont)cls.push('font-large');
+  return cls;
+}
+
+/* ── 상태 ── */
+let selectedIcon = '💬';
+let selectedColor = '#1565c0';
+let popupCount = 0;
+const MAX_POPUPS = 3;
+
+/* ── 시계 ── */
+function tick(){
+  const t = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+  document.getElementById('tb-clock').textContent = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false});
+  document.getElementById('tb-clock2').textContent = t;
+}
+setInterval(tick,1000); tick();
+
+/* ── 아이콘 선택 ── */
+function selectIcon(btn){
+  document.querySelectorAll('#icon-group .icon-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedIcon = btn.dataset.icon;
+}
+
+/* ── 색상 선택 ── */
+function selectColor(el){
+  document.querySelectorAll('#color-group .color-swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  selectedColor = el.dataset.color;
+  document.getElementById('custom-color-picker').value = rgbToHex(selectedColor);
+}
+
+function onPickerChange(input){
+  document.querySelectorAll('#color-group .color-swatch').forEach(s=>s.classList.remove('active'));
+  selectedColor = input.value;
+}
+
+function rgbToHex(color){ return color; }
+
+/* ── 팝업 생성 ── */
+function firePopup(icon, title, sub, type, customColor, duration){
+  const container = document.getElementById('popup-container');
+
+  // 최대 3개 제한
+  const existing = container.querySelectorAll('.vn-popup:not(.hiding)');
+  if(existing.length >= MAX_POPUPS){
+    dismissPopup(existing[existing.length-1]);
+  }
+
+  const dur = (duration || 3);
+  const el = document.createElement('div');
+  const themeClasses = getPopupThemeClasses().join(' ');
+  el.className = `vn-popup popup-${type || 'info'}${themeClasses ? ' '+themeClasses : ''}`;
+  el.style.setProperty('--dur', dur+'s');
+
+  if(type === 'custom' && customColor){
+    // 커스텀 색상: 그라디언트 생성
+    const hex = customColor;
+    const darker = shadeColor(hex, -18);
+    el.style.background = `linear-gradient(135deg,${darker},${hex})`;
+  }
+
+  el.innerHTML = `
+    <span class="popup-icon">${icon}</span>
+    <div class="popup-body">
+      <div class="popup-title">${title}</div>
+      ${sub ? `<div class="popup-sub">${sub}</div>` : ''}
+    </div>
+    <button class="popup-close" onclick="dismissPopup(this.parentElement)">✕</button>
+  `;
+
+  // 클릭으로 닫기
+  el.addEventListener('click', e=>{
+    if(!e.target.classList.contains('popup-close')) dismissPopup(el);
+  });
+
+  container.prepend(el);
+  popupCount++;
+
+  // 자동 닫기
+  const timer = setTimeout(()=> dismissPopup(el), dur * 1000);
+  el._timer = timer;
+}
+
+function dismissPopup(el){
+  if(!el || el.classList.contains('hiding')) return;
+  clearTimeout(el._timer);
+  el.classList.add('hiding');
+  setTimeout(()=> el.remove(), 230);
+}
+
+/* ── 커스텀 팝업 ── */
+function fireCustomPopup(){
+  const title = document.getElementById('custom-text').value.trim() || '알림';
+  const sub   = document.getElementById('custom-sub').value.trim();
+  const dur   = parseInt(document.getElementById('duration-slider').value);
+  firePopup(selectedIcon, title, sub, 'custom', selectedColor, dur);
+}
+
+/* ── 색상 보조 ── */
+function shadeColor(hex, pct){
+  const n = parseInt(hex.slice(1),16);
+  const r = Math.min(255,Math.max(0,(n>>16)+pct));
+  const g = Math.min(255,Math.max(0,((n>>8)&0xff)+pct));
+  const b = Math.min(255,Math.max(0,(n&0xff)+pct));
+  return `#${((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1)}`;
+}
+
+/* ── 키보드 단축키 안내 ── */
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && e.ctrlKey) fireCustomPopup();
+});
+</script>
+</body>
+</html>

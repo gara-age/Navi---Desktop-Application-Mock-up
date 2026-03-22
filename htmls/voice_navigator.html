@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+    font-size: 11pt;
+    line-height: 1.8;
+    color: #1a1a1a;
+    padding: 30mm 25mm;
+  }
+  h1 {
+    font-size: 22pt;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 6px;
+    color: #1a1a2e;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 12pt;
+    color: #444;
+    margin-bottom: 4px;
+  }
+  .doc-meta {
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #1a1a2e;
+    padding-bottom: 16px;
+  }
+  .intro-box {
+    background: #f4f6fb;
+    border-left: 4px solid #1a1a2e;
+    padding: 14px 18px;
+    margin-bottom: 32px;
+    font-size: 10.5pt;
+    color: #333;
+    line-height: 1.9;
+  }
+  h2 {
+    font-size: 15pt;
+    font-weight: 700;
+    color: #fff;
+    background: #1a1a2e;
+    padding: 8px 14px;
+    margin-top: 36px;
+    margin-bottom: 14px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 12pt;
+    font-weight: 700;
+    color: #1a1a2e;
+    border-bottom: 1.5px solid #c8d0e0;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 10px;
+    page-break-after: avoid;
+  }
+  p {
+    margin-bottom: 10px;
+  }
+  .design-principles {
+    counter-reset: principle;
+  }
+  .principle-item {
+    counter-increment: principle;
+    padding: 8px 12px 8px 40px;
+    position: relative;
+    margin-bottom: 6px;
+    background: #f9f9fc;
+    border-radius: 4px;
+  }
+  .principle-item::before {
+    content: counter(principle);
+    position: absolute;
+    left: 12px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px 0;
+    font-size: 9.5pt;
+  }
+  th {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 700;
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #dde3ef;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f4f6fb; }
+  .arch-box {
+    background: #0f0f1a;
+    color: #e8eaf6;
+    font-family: 'Courier New', monospace;
+    font-size: 8.5pt;
+    padding: 16px 18px;
+    margin: 14px 0;
+    border-radius: 4px;
+    line-height: 1.7;
+    white-space: pre;
+  }
+  .state-box {
+    display: inline-block;
+    background: #eef2ff;
+    border: 1px solid #b0bce8;
+    border-radius: 4px;
+    padding: 10px 16px;
+    margin: 6px 4px;
+    font-size: 9.5pt;
+    min-width: 100px;
+    text-align: center;
+  }
+  .state-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin: 10px 0 16px 0;
+  }
+  .arrow { color: #888; font-size: 14pt; padding: 0 4px; }
+  .func-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .func-list li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 9.5pt;
+  }
+  .func-list li:last-child { border-bottom: none; }
+  .func-id {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    margin-right: 8px;
+    min-width: 70px;
+    text-align: center;
+  }
+  .func-id.new {
+    background: #1e6b3c;
+  }
+
+  code {
+    font-family: 'Courier New', monospace;
+    background: #f0f2f8;
+    border: 1px solid #d0d8ea;
+    padding: 0 4px;
+    border-radius: 3px;
+    font-size: 9pt;
+  }
+  .code-block {
+    background: #0f0f1a;
+    color: #e8eaf6;
+    font-family: 'Courier New', monospace;
+    font-size: 8pt;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-radius: 4px;
+    line-height: 1.6;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .json-block {
+    background: #0f1a0f;
+    color: #b8f0b8;
+    font-family: 'Courier New', monospace;
+    font-size: 8pt;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-radius: 4px;
+    line-height: 1.6;
+    white-space: pre;
+  }
+  .scenario-box {
+    border: 1px solid #c8d0e0;
+    border-radius: 4px;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+  .scenario-header {
+    background: #2c3e6e;
+    color: #fff;
+    padding: 8px 14px;
+    font-weight: 700;
+    font-size: 10.5pt;
+  }
+  .scenario-body {
+    padding: 12px 16px;
+    font-size: 9.5pt;
+    line-height: 1.8;
+  }
+  .scenario-cmd {
+    font-style: italic;
+    color: #2c3e6e;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .msg-table th { background: #2c3e6e; }
+  .highlight-box {
+    background: #eafaf1;
+    border: 1px solid #a8d5b8;
+    border-left: 4px solid #1e6b3c;
+    padding: 12px 16px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .highlight-box strong {
+    color: #1e6b3c;
+  }
+  .summary-box {
+    background: #1a1a2e;
+    color: #e8eaf6;
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin-top: 16px;
+    line-height: 2;
+  }
+  .summary-box .tech-item {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border-radius: 3px;
+    padding: 2px 8px;
+    margin: 2px;
+    font-size: 9.5pt;
+  }
+  .roadmap-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    font-size: 10pt;
+  }
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 9pt;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .step-content { padding-top: 2px; }
+  .page-break { page-break-before: always; }
+  .section-intro {
+    color: #444;
+    font-size: 10.5pt;
+    margin-bottom: 14px;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<h1>AI 기반 시각장애인 PC 음성 비서 시스템</h1>
+<h1 style="font-size:26pt; color:#1a1a2e; margin-top:8px;">Voice Navigator</h1>
+<div class="subtitle">최종 기획서</div>
+
+
+
+<!-- ===== 1 ===== -->
+<h2>1. 프로젝트 개요</h2>
+<p>Voice Navigator는 시각장애인 및 저시력 사용자가 Windows PC와 웹 서비스를 보다 쉽게 사용할 수 있도록 돕는 AI 기반 음성 비서 시스템이다. 본 시스템은 단순히 화면의 텍스트를 낭독하는 스크린리더의 역할에 머무르지 않고, 사용자의 명령을 이해한 뒤 실제 작업을 대신 수행하고 그 결과를 요약하여 안내하는 것을 목표로 한다.</p>
+<p>예를 들어 사용자가 <em>'유튜브 들어가서 고양이가 춤추는 영상 찾아줘'</em> 또는 <em>'네이버 지도에서 서울역에서 한국폴리텍대학 인천캠퍼스 가는 지하철 경로 찾아줘'</em>라고 명령하면, 시스템은 브라우저 접속, 검색창 탐색, 입력, 결과 수집, 정보 요약, 후속 질문 생성까지의 과정을 단계적으로 수행한다.</p>
+<p>따라서 Voice Navigator는 단순 음성 입력 기능이 아니라, 복합 작업을 계획하고 실행하는 <strong>작업형 AI Agent 시스템</strong>으로 정의된다.</p>
+
+
+<!-- ===== 2 ===== -->
+<h2>2. 설계 원칙</h2>
+<div class="design-principles">
+  <div class="principle-item">시스템은 백그라운드 프로그램과 메인 프로그램으로 구성된 이중 구조를 가져야 한다.</div>
+  <div class="principle-item">사용자는 단축키, 웨이크 워드, GUI 버튼, 텍스트 입력 등 복수의 입력 경로를 사용할 수 있어야 한다.</div>
+  <div class="principle-item">사용자의 명령은 바로 실행되는 것이 아니라, 명령 정규화 → 의도 분석 → 슬롯 추출 → 목표 정의 → 단계 계획 생성 → 실행 → 검증 → 결과 요약의 절차를 거쳐 처리되어야 한다.</div>
+  <div class="principle-item">접근성과 보안을 동시에 고려하여, 민감 입력 환경에서는 음성 안내와 외부 전송을 제한할 수 있어야 한다.</div>
+</div>
+
+
+<!-- ===== 3 ===== -->
+<h2>3. 시스템 구조 개요</h2>
+<p class="section-intro">Voice Navigator는 크게 두 프로그램으로 나뉜다. <strong>백그라운드 프로그램</strong>은 사용자의 호출 시도를 감지하고 메인 프로그램을 활성화하는 상시 대기 프로세스이며, <strong>메인 프로그램</strong>은 실제 GUI, 설정, STT/TTS, AI Agent 처리, 자동화 엔진 실행, 결과 응답, 로그 관리 기능을 수행하는 주 애플리케이션이다.</p>
+
+<div class="arch-box">┌──────────────────────────────────────────────┐
+│                   사용자                       │
+│   단축키 입력 / 웨이크 워드 / GUI 버튼 / 텍스트 명령 │
+└──────────────────────────────────────────────┘
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│           백그라운드 프로그램                  │
+│  - 메인 프로그램 실행 여부 감지                │
+│  - 글로벌 단축키 감지                         │
+│  - 웨이크 워드 감지                           │
+│  - 메인 프로그램 활성화                        │
+│  - Windows 시작 시 자동 실행 (BG-07)          │
+└──────────────────────────────────────────────┘
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│              메인 프로그램                     │
+│  GUI · 설정 · STT/TTS · 텍스트 입력 · 최근 명령 │
+│  로그 관리 · AI Agent 실행 · 결과 요약 및 응답  │
+│  백그라운드 실행 확인 및 자동 복구 (MAIN-15/16) │
+└──────────────────────────────────────────────┘
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│       Command Processing + Agent Controller   │
+│  명령 정규화 → 의도 분석 → 슬롯 추출 → 목표 정의 │
+│  → 계획 생성 → 실행 → 검증 → 결과 요약 → 후속 질문 │
+└──────────────────────────────────────────────┘
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│             Automation Layer                  │
+│   Playwright (웹 자동화) / Windows UI Automation │
+└──────────────────────────────────────────────┘
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│         외부 서비스 및 운영체제 자원            │
+│   YouTube / Google Search / Naver Map / Windows 앱 │
+└──────────────────────────────────────────────┘</div>
+
+
+<!-- ===== 4 ===== -->
+<h2>4. 프로세스 구조도 및 상태 흐름</h2>
+<p class="section-intro">전체 동작 흐름: 사용자 호출 → 백그라운드 감지 → 메인 프로그램 실행 확인 → 실행 또는 활성화 → Listening → STT/텍스트 수집 → 명령 분석 및 계획 생성 → Playwright / UI Automation 실행 → 결과 검증 → GUI 및 TTS 응답 → Ready 복귀 → 백그라운드 감지 재활성화</p>
+
+<h3>백그라운드 프로그램 상태</h3>
+<div class="state-flow">
+  <div class="state-box">Idle</div><div class="arrow">→</div>
+  <div class="state-box">Trigger Monitoring</div><div class="arrow">→</div>
+  <div class="state-box">Wake Main Program</div><div class="arrow">→</div>
+  <div class="state-box">Background Suspend</div><div class="arrow">→</div>
+  <div class="state-box">Trigger Monitoring</div>
+</div>
+
+<h3>메인 프로그램 상태</h3>
+<div class="state-flow">
+  <div class="state-box">Inactive</div><div class="arrow">→</div>
+  <div class="state-box">Ready</div><div class="arrow">→</div>
+  <div class="state-box">Listening</div><div class="arrow">→</div>
+  <div class="state-box">Planning</div><div class="arrow">→</div>
+  <div class="state-box">Executing</div><div class="arrow">→</div>
+  <div class="state-box">Verifying</div><div class="arrow">→</div>
+  <div class="state-box">Responding</div><div class="arrow">→</div>
+  <div class="state-box">Ready</div>
+</div>
+<div class="state-flow" style="margin-top:4px;">
+  <div class="state-box" style="background:#fff8e1; border-color:#f0c040;">Reading</div>
+  <div class="arrow">←</div>
+  <div class="state-box">Planning</div>
+  <div class="arrow" style="margin-left:16px;">→ "멈춰"</div>
+  <div class="state-box">Ready</div>
+</div>
+<p>화면 읽기 명령(screen_read_web, screen_read_app 등) 수행 시 Executing 단계를 거치지 않고 Planning에서 Reading 상태로 직접 분기한다. Reading 상태에서는 "멈춰", "다음", "처음부터" 키워드를 Planner 없이 즉시 처리한다.</p>
+
+<p>백그라운드 프로그램은 메인 프로그램이 Listening 또는 Session Running 상태일 때 감지 기능을 중단해야 하며, 메인 프로그램은 작업이 끝난 뒤 Ready 상태로 복귀하고 백그라운드에 감지 재개를 알릴 수 있어야 한다.</p>
+
+
+<!-- ===== 5 ===== -->
+<div class="page-break"></div>
+<h2>5. 백그라운드 프로그램 기능 명세</h2>
+<p class="section-intro"><strong>프로그램명:</strong> Voice Navigator Background Service &nbsp;|&nbsp; <strong>목적:</strong> 사용자의 호출 시도를 감지하고, 메인 프로그램의 실행 여부를 확인한 뒤, 필요 시 메인 프로그램을 실행 또는 활성화하는 상시 대기 서비스</p>
+
+<table>
+  <thead><tr><th style="width:14%">기능 ID</th><th style="width:28%">기능명</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td>BG-01</td><td>메인 프로그램 실행 여부 감지</td><td>현재 메인 프로그램이 실행 중인지 주기적으로 확인한다. 실행 중이면 포커스 활성화, 미실행이면 실행 준비를 한다.</td></tr>
+    <tr><td>BG-02</td><td>글로벌 단축키 감지</td><td>사용자가 설정한 호출 단축키를 시스템 전역에서 감지한다. 예: F2, Ctrl+Space</td></tr>
+    <tr><td>BG-03</td><td>웨이크 워드 감지</td><td>설정된 호출어를 감지한다. 예: '보이스 내비게이터', '보이스'</td></tr>
+    <tr><td>BG-04</td><td>메인 프로그램 활성화</td><td>호출 감지 시 WAKE_UP, START_LISTENING 이벤트를 메인 프로그램에 전달한다.</td></tr>
+    <tr><td>BG-05</td><td>감지 기능 일시 중지</td><td>메인 프로그램이 Listening 또는 Session Running 상태일 때 트리거 감지를 잠시 중단한다.</td></tr>
+    <tr><td>BG-06</td><td>감지 기능 재개</td><td>메인 프로그램이 작업을 마친 뒤 SESSION_FINISHED를 보내면 감지를 다시 시작한다.</td></tr>
+    <tr><td>BG-07</td><td>Windows 시작 시 자동 실행</td><td>백그라운드 프로그램은 Windows 부팅 시 자동으로 실행되도록 등록된다. 시작 프로그램 폴더 등록 또는 레지스트리 Run 등록 방식을 사용한다.</td></tr>
+  </tbody>
+</table>
+
+<h3>비기능 요구사항</h3>
+<p>백그라운드 프로그램은 CPU와 메모리 사용량이 낮아야 하며, 장시간 실행되어도 안정적이어야 한다. 단축키 입력 및 웨이크 워드 감지 후 빠르게 반응해야 하고, 메인 프로그램과의 상태 충돌이 없어야 한다.</p>
+
+
+<!-- ===== 6 ===== -->
+<h2>6. 메인 프로그램 기능 명세</h2>
+<p class="section-intro"><strong>프로그램명:</strong> Voice Navigator Main Application &nbsp;|&nbsp; <strong>목적:</strong> GUI 제공, 설정 관리, 음성 및 텍스트 명령 처리, AI Agent 실행, 자동화 수행, 결과 응답, 로그 저장 및 삭제 등 실제 시스템 본체 기능을 수행하는 주 애플리케이션</p>
+
+<table>
+  <thead><tr><th style="width:14%">기능 ID</th><th style="width:28%">기능명</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td>MAIN-01</td><td>GUI 제공</td><td>상단 상태 영역, 좌측 기능 패널, 중앙 실행 로그, 하단 입력창, 우측 상태 패널을 제공한다.</td></tr>
+    <tr><td>MAIN-02</td><td>음성 입력 시작</td><td>백그라운드 호출, GUI 내 듣기 시작 버튼, 또는 내부 이벤트를 통해 Listening 상태에 진입한다.</td></tr>
+    <tr><td>MAIN-03</td><td>텍스트 명령 입력</td><td>음성 사용이 어려운 경우 입력창으로 명령을 직접 받을 수 있다.</td></tr>
+    <tr><td>MAIN-04</td><td>STT 연동</td><td>사용자 음성을 텍스트 명령으로 변환한다.</td></tr>
+    <tr><td>MAIN-05</td><td>TTS 연동</td><td>시스템 결과와 후속 질문을 음성으로 출력한다.</td></tr>
+    <tr><td>MAIN-06</td><td>명령 로그 표시</td><td>사용자 명령과 시스템 응답을 중앙 패널에 기록한다.</td></tr>
+    <tr><td>MAIN-07</td><td>최근 명령 보기</td><td>최근 수행한 명령을 목록으로 보여 주고 다시 선택할 수 있도록 한다.</td></tr>
+    <tr><td>MAIN-08</td><td>AI Agent 실행</td><td>명령 정규화, 의도 분석, 슬롯 추출, 작업 목표 정의, 계획 생성, 실행, 검증, 응답 생성을 수행한다.</td></tr>
+    <tr><td>MAIN-09</td><td>웹 자동화 실행</td><td>Playwright를 통해 유튜브, 구글, 네이버지도 등 웹 서비스를 조작한다.</td></tr>
+    <tr><td>MAIN-10</td><td>Windows UI 정보 활용</td><td>UI Automation을 통해 현재 활성 창, 포커스, 접근성 정보, 보안 입력 필드를 파악한다.</td></tr>
+    <tr><td>MAIN-11</td><td>결과 요약 및 후속 질문</td><td>결과를 자연어로 설명하고 다음 행동을 사용자에게 제안한다.</td></tr>
+    <tr><td>MAIN-12</td><td>설정 관리</td><td>TTS, 단축키, 언어, 로그, 접근성, 백그라운드 프로그램의 자동 재시작, 보안 관련 설정을 제공한다.</td></tr>
+    <tr><td>MAIN-13</td><td>로그 삭제</td><td>저장된 로그를 삭제하거나 초기화할 수 있어야 한다.</td></tr>
+    <tr><td>MAIN-14</td><td>오류 정보 관리</td><td>오류 로그 저장 및 전송 여부를 사용자가 선택할 수 있어야 한다.</td></tr>
+    <tr><td>MAIN-15</td><td>백그라운드 실행 여부 확인</td><td>메인 프로그램 시작 시 백그라운드 프로그램이 현재 실행 중인지 확인한다. 비정상 종료 시 복구, 단독 실행 시 호출 기능 유지, 시스템 일관성 확보를 목적으로 한다.</td></tr>
+    <tr><td>MAIN-16</td><td>백그라운드 자동 복구 실행</td><td>백그라운드 프로그램이 실행 중이 아닐 경우 자동으로 실행한다. 메인 프로그램 시작 직후 및 백그라운드 연결 끊김 감지 시 동작한다.</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ===== 7 ===== -->
+<h2>7. 설정 기능 상세 명세</h2>
+<table>
+  <thead><tr><th style="width:22%">설정 범주</th><th style="width:38%">세부 항목</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td>음성 설정</td><td>TTS 속도, 음성 종류, 성별/캐릭터 느낌</td><td>사용자 선호에 맞는 음성 출력 제공</td></tr>
+    <tr><td>입력 설정</td><td>호출 단축키, 웨이크 워드 사용 여부, STT 언어, 시스템 언어</td><td>다양한 호출 환경과 언어 환경에 대응</td></tr>
+    <tr><td>로그 설정</td><td>명령 로그 저장 여부, 응답 로그 저장 여부, 저장 경로, 로그 삭제</td><td>기록 관리 및 디버깅 보조</td></tr>
+    <tr><td>오류 및 진단</td><td>오류 보내기, 디버그 로그 저장 여부</td><td>안정화 및 문제 분석 지원</td></tr>
+    <tr><td>접근성 설정</td><td>큰 글씨, 고대비 모드, 음성 우선 모드</td><td>저시력 및 다양한 사용 환경 대응</td></tr>
+    <tr><td>백그라운드 프로그램 설정</td><td>백그라운드 프로그램의 자동 재시작</td><td>백그라운드 프로그램의 항상 접근 가능함을 통해 일관된 사용자 경험 제공</td></tr>
+    <tr><td>보안 설정</td><td>보안 입력 모드, 민감 입력 감지 시 음성 중단</td><td>개인정보 유출 방지</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ===== 8 ===== -->
+<div class="page-break"></div>
+<h2>8. 명령 처리 구조</h2>
+<table>
+  <thead><tr><th style="width:20%">단계</th><th style="width:50%">설명</th><th>담당 요소</th></tr></thead>
+  <tbody>
+    <tr><td>명령 수집</td><td>단축키, 웨이크 워드, GUI 버튼, 텍스트 입력을 통해 명령을 수집한다.</td><td>백그라운드 / 메인</td></tr>
+    <tr><td>명령 정규화</td><td>오인식 가능성이 있는 표현을 정리한다.</td><td>Planner Agent</td></tr>
+    <tr><td>의도 분석</td><td>사용자의 목표가 검색, 경로 탐색, 실행, 읽기 중 무엇인지 분류한다.</td><td>Planner Agent</td></tr>
+    <tr><td>슬롯 추출</td><td>검색어, 출발지, 도착지, 플랫폼 같은 핵심 정보를 구조화한다.</td><td>Planner Agent</td></tr>
+    <tr><td>작업 목표 정의</td><td>사용자의 문장을 시스템이 처리할 수 있는 목표 문장으로 바꾼다.</td><td>Planner Agent</td></tr>
+    <tr><td>단계 계획 생성</td><td>작업을 브라우저 실행, 사이트 접속, 입력, 결과 추출 같은 단계로 분해한다.</td><td>Planner Agent</td></tr>
+    <tr><td>단계 실행</td><td>Playwright 또는 UI Automation을 통해 실제 작업을 수행한다.</td><td>Executor Agent</td></tr>
+    <tr><td>단계 검증</td><td>원하는 화면이나 상태가 실제로 나타났는지 확인한다.</td><td>Verifier Agent</td></tr>
+    <tr><td>결과 요약</td><td>최종 정보를 자연어로 정리한다.</td><td>Response Agent</td></tr>
+    <tr><td>후속 질문</td><td>다음 행동을 제안한다. 예: "첫 번째 영상을 재생할까요?"</td><td>Response Agent</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ===== 9 ===== -->
+<h2>9. 대표 사용자 시나리오</h2>
+
+<div class="scenario-box">
+  <div class="scenario-header">시나리오 A — 유튜브에서 고양이가 춤추는 영상 찾기</div>
+  <div class="scenario-body">
+    <div class="scenario-cmd">사용자 명령: "유튜브 들어가서 고양이가 춤추는 영상 찾아줘"</div>
+    브라우저 실행 → 유튜브 접속 → 검색창 탐색 → 검색어 입력 → 검색 실행 → 결과 수집 → 상위 결과 제목과 재생시간 추출 → 결과 요약 → <strong>"첫 번째 영상을 재생할까요?"</strong> 질문
+  </div>
+</div>
+
+<div class="scenario-box">
+  <div class="scenario-header">시나리오 B — 네이버지도에서 지하철 경로 찾기</div>
+  <div class="scenario-body">
+    <div class="scenario-cmd">사용자 명령: "네이버 지도에서 서울역에서 한국폴리텍대학 인천캠퍼스 가는 지하철 경로 찾아줘"</div>
+    브라우저 실행 → 네이버지도 접속 → 길찾기 탭 진입 → 출발지 입력 → 출발지 검증 → 목적지 입력 → 목적지 검증 → 지하철 모드 선택 → 결과 수집 → 소요시간과 환승 정보 추출 → 결과 요약 → <strong>"경로를 안내할까요?"</strong> 질문<br><br>
+    <em>핵심: 단순히 결과 화면을 띄우는 것이 아니라 각 단계의 성공 여부를 검증하고, 실패 시 재시도 또는 대체 경로를 선택한다.</em>
+  </div>
+</div>
+
+
+<!-- ===== 10 ===== -->
+<h2>10. 프로그램 간 통신 구조</h2>
+<table class="msg-table">
+  <thead><tr><th style="width:36%">방향</th><th style="width:28%">메시지</th><th>의미</th></tr></thead>
+  <tbody>
+    <tr><td>백그라운드 → 메인</td><td>WAKE_UP</td><td>메인 프로그램을 실행 또는 활성화</td></tr>
+<tr><td>백그라운드 → 메인</td><td>START_LISTENING</td><td>WAKE_UP 이후 메인 프로그램에게 즉시 청취 시작을 명령한다. 백그라운드가 메인에게 내리는 명령 메시지이다.</td></tr>
+    <tr><td>백그라운드 → 메인</td><td>HOTKEY_TRIGGERED</td><td>단축키로 호출됨</td></tr>
+    <tr><td>백그라운드 → 메인</td><td>WAKEWORD_TRIGGERED</td><td>호출어로 호출됨</td></tr>
+    <tr><td>메인 → 백그라운드</td><td>MAIN_ACTIVE</td><td>메인 프로그램 활성화됨</td></tr>
+<tr><td>메인 → 백그라운드</td><td>LISTENING_STARTED</td><td>START_LISTENING 명령을 받아 실제 청취가 시작되었음을 백그라운드에 알리는 확인 응답이다. 이 메시지를 받은 백그라운드는 감지 기능을 일시 중단한다.</td></tr>
+    <tr><td>메인 → 백그라운드</td><td>LISTENING_FINISHED</td><td>음성 수집 종료</td></tr>
+    <tr><td>메인 → 백그라운드</td><td>SESSION_RUNNING</td><td>현재 작업 세션 진행 중</td></tr>
+    <tr><td>메인 → 백그라운드</td><td>SESSION_FINISHED</td><td>작업 종료, 백그라운드 감지 재개</td></tr>
+  </tbody>
+</table>
+<h3>메인 프로그램 내부 이벤트</h3>
+<p>아래 이벤트는 백그라운드와의 통신이 아닌, 메인 프로그램 내부에서 처리되는 이벤트이다.</p>
+<table>
+  <thead><tr><th style="width:28%">이벤트명</th><th style="width:28%">발생 조건</th><th>처리 내용</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>OPEN_WINDOW_REQUEST</td>
+      <td>사용자가 음성으로 "화면 열어줘" 등 명시적 창 열기 명령을 하거나, 수동으로 직접 창을 열었을 때</td>
+      <td>Agent가 명령을 해석한 뒤 메인 창을 포커스하거나 숨김 해제한다. 단순 음성 호출 및 Listening 상태에서는 자동으로 발생하지 않는다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>Listening 중 UI 정책:</strong> 음성 청취 및 처리 중에는 메인 창이 자동으로 열리지 않는다. 대신 화면 우측 하단에 토스트 팝업("음성 듣는 중", "처리 중")만 표시되며, 메인 창은 작업표시줄에 실행 중 상태로만 존재한다.
+</div>
+
+<!-- ===== 11 ===== -->
+<div class="page-break"></div>
+<h2>11. 시스템 동작 흐름 (최종)</h2>
+
+<h3>Windows 시작 시</h3>
+<div class="state-flow">
+  <div class="state-box">Windows 부팅</div><div class="arrow">→</div>
+  <div class="state-box">백그라운드 자동 실행</div><div class="arrow">→</div>
+  <div class="state-box">호출 감지 대기</div>
+</div>
+
+<h3>음성 호출 / 단축키 입력 시</h3>
+<div class="state-flow">
+  <div class="state-box">백그라운드 감지</div><div class="arrow">→</div>
+  <div class="state-box">메인 실행 여부 확인</div><div class="arrow">→</div>
+  <div class="state-box">실행 중: 활성화 / 미실행: 실행</div><div class="arrow">→</div>
+  <div class="state-box">Listening 시작</div>
+</div>
+
+<h3>사용자가 메인 프로그램 직접 실행 시</h3>
+<div class="state-flow">
+  <div class="state-box">메인 시작</div><div class="arrow">→</div>
+  <div class="state-box">백그라운드 확인</div><div class="arrow">→</div>
+  <div class="state-box">미실행 → 자동 실행</div><div class="arrow">→</div>
+  <div class="state-box">정상 사용</div><div class="arrow">→</div>
+  <div class="state-box">종료 후 백그라운드 유지</div>
+</div>
+
+<div class="highlight-box">
+  <strong>핵심 원칙:</strong> 메인 프로그램은 백그라운드를 복구하고, 백그라운드는 항상 살아 있어야 한다.
+</div>
+
+
+<!-- ===== 12 ===== -->
+<h2>12. 최종 기술 스택 확정안</h2>
+<p class="section-intro">팀원 전원이 LLM/STT/TTS 개발 경험이 없고, 교내 지원금이 없으며, 개발 기간 3~4개월, 실제 개발 가능 인원 3~4명이라는 조건을 전제로 한다. 가장 성능이 높은 기술보다, 끝까지 구현 가능한 기술 조합이 더 중요하다.</p>
+
+<table>
+  <thead><tr><th>영역</th><th>최종 선택</th><th>역할</th><th>판단 이유</th></tr></thead>
+  <tbody>
+    <tr><td>GUI</td><td>PySide6</td><td>메인 프로그램 UI</td><td>Python 중심 통합이 쉽고 데스크톱 UI 완성도가 높다.</td></tr>
+    <tr><td>웹 자동화</td><td>Playwright</td><td>유튜브/구글/네이버지도 제어</td><td>DOM 기반 자동화와 auto-wait 구조 덕분에 실패율을 줄이기 쉽다.</td></tr>
+    <tr><td>Windows 제어</td><td>Windows UI Automation</td><td>접근성 정보, 포커스, 보안 입력 감지</td><td>프로젝트의 접근성 정체성을 구성하는 핵심 기술이다.</td></tr>
+    <tr><td>LLM</td><td>GPT-4.1 mini</td><td>명령 이해, 슬롯 추출, 계획 생성, 결과 요약</td><td>복합 명령 Planner 품질과 구현 안정성의 균형이 가장 좋다.</td></tr>
+    <tr><td>STT</td><td>gpt-4o-mini-transcribe (주력) / whisper.cpp (병행)</td><td>음성 → 텍스트 변환</td><td>초기 안정성과 후반 비용 절감을 동시에 고려한 전략이다.</td></tr>
+    <tr><td>TTS</td><td>GCP Text-to-Speech</td><td>텍스트 → 음성 안내</td><td>신규 사용자 300달러 크레딧을 활용할 수 있어 학생 프로젝트에 유리하다.</td></tr>
+    <tr><td>데이터 구조</td><td>JSON</td><td>Agent 간 데이터 전달</td><td>의도, 슬롯, 계획, 결과를 구조적으로 관리하기 쉽다.</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ===== 13 ===== -->
+<h2>13. 기술 스택 상세 정리</h2>
+
+<h3>13.1 GUI — PySide6</h3>
+<p>PySide6는 메인 프로그램 UI를 담당한다. 상단 상태바, 좌측 기능 패널, 중앙 실행 로그, 하단 텍스트 입력창, 우측 엔진 상태 패널, 설정창, 최근 명령창 등을 구성한다. Python 기반이라 STT, TTS, LLM, Playwright와 동일 언어로 묶기 쉽고, Tkinter보다 구조적인 UI를 만들기에 유리하다.</p>
+
+<h3>13.2 웹 자동화 — Playwright</h3>
+<p>Playwright는 유튜브, 구글, 네이버지도 등 웹 서비스 자동화를 담당한다. 좌표 클릭보다 DOM 기반 자동화가 필수이므로 Playwright가 가장 적합하다. 검색창 탐색, 결과 카드 수집, 경로 결과 확인 등 단계별 검증 로직을 붙이기 쉽다.</p>
+
+<h3>13.3 Windows 접근성 — UI Automation</h3>
+<p>Windows UI Automation은 현재 활성 창, 포커스된 요소, 버튼/입력창 역할, 보안 입력 필드 감지 등을 담당한다. 이 프로젝트가 시각장애인을 위한 PC 음성 비서이기 때문에, 운영체제 차원의 접근성 정보 활용이 필수적이다.</p>
+
+<h3>13.4 LLM — GPT-4.1 mini</h3>
+<p>GPT-4.1 mini는 Planner Agent의 핵심 모델이다. 자연어 명령 정규화, 의도 분석, 검색어/출발지/도착지/교통수단 등의 슬롯 추출, 복합 작업 단계별 계획 변환을 수행한다. 초보 팀 기준으로 복합 명령 품질과 구현 안정성의 균형이 좋다.</p>
+
+<h3>13.5 STT — gpt-4o-mini-transcribe + whisper.cpp 병행 전략</h3>
+<p>STT는 전체 시스템 성공률을 좌우하는 입력 계층이다. 1단계에서는 <strong>gpt-4o-mini-transcribe</strong>로 전체 파이프라인을 완성하고, 2단계에서는 <strong>whisper.cpp</strong>를 별도 브랜치로 붙여 한국어 정확도, 반응 속도, CPU 점유율, 실시간성, 배포 편의성을 비교한다. 발표 전까지 whisper.cpp가 안정화되면 전환을 검토하고, 그렇지 않으면 gpt-4o-mini-transcribe를 유지한다.</p>
+
+<table>
+  <thead><tr><th>단계</th><th>사용 기술</th><th>목표</th></tr></thead>
+  <tbody>
+    <tr><td>1단계</td><td>gpt-4o-mini-transcribe</td><td>전체 파이프라인을 빠르게 완성하고 발표 안정성을 확보한다.</td></tr>
+    <tr><td>2단계</td><td>whisper.cpp</td><td>로컬 처리 가능성, 비용 절감 효과, 오프라인 확장 가능성을 검증한다.</td></tr>
+    <tr><td>3단계</td><td>최종 선택 판단</td><td>발표 직전까지 whisper.cpp 안정화 여부를 보고 유지 또는 전환을 결정한다.</td></tr>
+  </tbody>
+</table>
+
+<h3>13.6 TTS — GCP Text-to-Speech</h3>
+<p>TTS는 결과를 사용자에게 음성으로 읽어 주는 출력 계층이다. 신규 사용자 무료 크레딧 활용 가능성이 가장 큰 채택 이유이다. 장기 운영을 고려하면 Standard 또는 WaveNet 계열을 우선 사용하는 것이 비용 효율 측면에서 유리하다.</p>
+
+<h3>13.7 데이터 구조 — JSON</h3>
+<p>JSON은 Agent 간 데이터 구조화를 담당한다. <code>intent</code>, <code>platform</code>, <code>slots</code>, <code>goal</code>, <code>task_plan</code>, <code>response_template</code>, <code>execution_result</code> 등을 공통 형식으로 저장하고 주고받아, 시스템 유지보수와 디버깅에 유리하다.</p>
+
+
+<!-- ===== 14 ===== -->
+<div class="page-break"></div>
+<h2>14. AI Agent 내부 JSON 구조 설계</h2>
+<p>Planner Agent는 사용자 명령을 구조화된 데이터로 바꾸고, Executor와 Verifier가 읽기 쉬운 작업 계획으로 전달한다.</p>
+
+<div class="json-block">{
+  "intent": "naver_map_route",
+  "platform": "naver_map",
+  "slots": {
+    "origin": "서울역",
+    "destination": "한국폴리텍대학 인천캠퍼스",
+    "transport": "subway"
+  },
+  "goal": "네이버지도에서 지하철 경로를 검색하고 결과를 요약하여 사용자에게 안내한다",
+  "task_plan": [
+    {"step": 1, "action": "open_browser"},
+    {"step": 2, "action": "search_website",   "target": "naver_map"},
+    {"step": 3, "action": "verify_url",        "contains": "map.naver.com"},
+    {"step": 4, "action": "enter_route_mode"},
+    {"step": 5, "action": "set_origin",        "value": "서울역"},
+    {"step": 6, "action": "verify_origin",     "value": "서울역"},
+    {"step": 7, "action": "set_destination",   "value": "한국폴리텍대학 인천캠퍼스"},
+    {"step": 8, "action": "verify_destination","value": "한국폴리텍대학 인천캠퍼스"},
+    {"step": 9, "action": "select_transport",  "value": "subway"},
+    {"step":10, "action": "verify_transport",  "value": "subway"},
+    {"step":11, "action": "extract_route_result"}
+  ],
+  "response_template": {
+    "summary":   "{origin}에서 {destination}까지 가는 지하철 경로를 찾았습니다.",
+    "follow_up": "경로를 안내할까요?"
+  }
+}</div>
+
+<p>Planner는 자연어를 구조화하고, Executor는 task_plan을 순서대로 처리하며, Verifier는 verify 단계에서 상태를 확인한다. Response Agent는 response_template를 기반으로 사용자 응답을 생성한다.</p>
+
+
+<!-- ===== 15 ===== -->
+<h2>15. Playwright + LLM 실제 코드 예시</h2>
+
+<div class="code-block">import json
+from openai import OpenAI
+client = OpenAI()
+
+def plan_task(command: str) -> dict:
+    prompt = f"""
+사용자 명령을 JSON 작업 계획으로 변환하라.
+명령: {command}
+반환 형식:
+{{
+  "intent": "...",
+  "platform": "...",
+  "slots": {{}},
+  "task_plan": []
+}}
+"""
+    response = client.responses.create(
+        model="gpt-4.1-mini",
+        input=prompt
+    )
+    return json.loads(response.output_text)
+
+from playwright.sync_api import sync_playwright
+
+def execute_youtube_search(keyword: str):
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+        page.goto("https://www.youtube.com")
+        page.fill("input#search", keyword)
+        page.press("input#search", "Enter")
+        page.wait_for_selector("ytd-video-renderer")
+        videos = page.query_selector_all("ytd-video-renderer")[:3]
+        results = []
+        for video in videos:
+            title_el = video.query_selector("#video-title")
+            time_el  = video.query_selector(
+                "badge-shape, span.ytd-thumbnail-overlay-time-status-renderer"
+            )
+            title    = title_el.inner_text().strip() if title_el else "제목 없음"
+            duration = time_el.inner_text().strip()  if time_el  else "시간 정보 없음"
+            results.append({"title": title, "duration": duration})
+        return results
+
+command = "유튜브 들어가서 고양이가 춤추는 영상 찾아줘"
+plan = plan_task(command)
+if plan["intent"] == "youtube_video_search":
+    results = execute_youtube_search(plan["slots"]["keyword"])
+    for idx, item in enumerate(results, start=1):
+        print(f"{idx}번째 영상: {item['title']} / 재생시간: {item['duration']}")</div>
+
+<p>실제 구현에서는 위 코드에 Verifier Agent가 추가되어 브라우저 실행 여부, 
+URL 정상 접속 여부, 검색 결과 존재 여부 등을 단계별로 확인한다. 
+또한 19.3절에 따라 Playwright는 별도 스레드의 asyncio 루프에서 실행되며, 
+위 코드는 구조 이해를 위한 참고 예시이다.</p>
+
+<!-- ===== 16 ===== -->
+<h2>16. 검증 로직, 보안, 접근성</h2>
+<table>
+  <thead><tr><th>검증 대상</th><th>검증 방법</th><th>실패 시 대처</th></tr></thead>
+  <tbody>
+    <tr><td>브라우저 실행</td><td>chrome 또는 edge 프로세스 존재 확인</td><td>재실행 시도 또는 기본 브라우저 fallback</td></tr>
+    <tr><td>유튜브/지도 진입</td><td>URL에 youtube.com 또는 map.naver.com 포함 여부 확인</td><td>검색 결과에서 공식 링크 재선택</td></tr>
+    <tr><td>길찾기 탭 진입</td><td>출발지/도착지 입력창 존재 확인</td><td>길찾기 버튼 재탐색</td></tr>
+    <tr><td>출발지 설정</td><td>입력값 또는 선택 라벨이 서울역인지 확인</td><td>자동완성 후보 재선택</td></tr>
+    <tr><td>지하철 모드 선택</td><td>활성 탭/버튼 상태 확인</td><td>대중교통 경로 fallback 후 사용자 고지</td></tr>
+    <tr><td>검색 결과 수집</td><td>경로 리스트 또는 영상 카드 존재 확인</td><td>재검색 또는 재입력</td></tr>
+  </tbody>
+</table>
+<!-- ===== 16-1. Verifier Agent 상세 설계 ===== -->
+<h2>16-1. Verifier Agent 상세 설계</h2>
+
+<h3>검증 작업 범위</h3>
+<p>Verifier Agent의 검증 대상은 웹 기반 작업과 네이티브 앱 기반 작업으로 나뉜다. 두 범위 모두 발표 범위에 포함된다.</p>
+
+<table>
+  <thead><tr><th style="width:20%">작업 유형</th><th style="width:35%">대상 예시</th><th>주력 검증 방법</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>웹 기반</td>
+      <td>유튜브 영상 검색, 네이버지도 경로 탐색, 구글 검색</td>
+      <td>Playwright DOM Locator (1순위) → Windows UI Automation 보조 (2순위)</td>
+    </tr>
+    <tr>
+      <td>네이티브 앱</td>
+      <td>메모장 실행 및 텍스트 입력, 계산기 연산 결과 확인</td>
+      <td>Windows UI Automation (주력) → 파일 시스템 확인 (저장/생성 계열)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>검증 방식 결정 근거</h3>
+<table>
+  <thead><tr><th style="width:22%">검증 방식</th><th style="width:14%">채택 여부</th><th style="width:32%">장단점</th><th>판단 이유</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>DOM 기반 (Playwright)</td>
+      <td>✅ 1순위 채택</td>
+      <td>빠름, 추가 비용 없음. 단, 셀렉터 변경 시 깨질 수 있음</td>
+      <td>웹 자동화와 동일 도구로 처리 가능. 구현 난이도 낮고 비용 없음</td>
+    </tr>
+    <tr>
+      <td>Windows UI Automation</td>
+      <td>✅ 2순위 채택</td>
+      <td>OS 레벨 접근으로 셀렉터 변경에 강함. DOM보다 탐색 느림</td>
+      <td>DOM 실패 시 보조, 네이티브 앱 주력. 추가 비용 없음</td>
+    </tr>
+    <tr>
+      <td>스크린샷 + Vision LLM</td>
+      <td>❌ 채택 제외</td>
+      <td>시각적 판단 가능하나 API 호출 비용 발생, 응답 지연 1~3초</td>
+      <td>무지원금 조건에서 비용 예측 불가. 처리 지연으로 UX 저하</td>
+    </tr>
+    <tr>
+      <td>OCR 기반</td>
+      <td>❌ 채택 제외</td>
+      <td>로컬 처리 가능하나 한국어 정확도 불안정, 구현 복잡도 과도</td>
+      <td>투입 대비 효과 가장 낮음. DOM + UI Automation으로 대체 가능</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>DOM Locator 우선순위 fallback 체인</h3>
+<p>Playwright는 HTML에 role이 명시되지 않아도 태그의 암묵적 role을 자동으로 인식한다. 단, 대형 사이트는 커스텀 컴포넌트를 사용하는 경우가 많으므로 아래 우선순위 fallback 구조로 요소를 탐색한다.</p>
+
+<table>
+  <thead><tr><th style="width:8%">순위</th><th style="width:28%">방법</th><th style="width:32%">사용 상황</th><th>예시</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1순위</td>
+      <td>get_by_role()</td>
+      <td>button, input 등 표준 HTML 태그. role 미명시 시 암묵적 role 자동 인식</td>
+      <td>page.get_by_role("textbox", name="출발지")</td>
+    </tr>
+    <tr>
+      <td>2순위</td>
+      <td>get_by_placeholder()</td>
+      <td>placeholder 텍스트가 있는 input</td>
+      <td>page.get_by_placeholder("출발지를 입력하세요")</td>
+    </tr>
+    <tr>
+      <td>3순위</td>
+      <td>get_by_label()</td>
+      <td>label이 연결된 input</td>
+      <td>page.get_by_label("출발지")</td>
+    </tr>
+    <tr>
+      <td>4순위</td>
+      <td>locator() CSS 셀렉터</td>
+      <td>클래스명, id가 명확한 경우</td>
+      <td>page.locator("input.origin_input")</td>
+    </tr>
+    <tr>
+      <td>5순위</td>
+      <td>locator() contenteditable</td>
+      <td>div 기반 커스텀 입력 컴포넌트</td>
+      <td>page.locator("div[contenteditable='true']").first</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>DOM 실패 시 — UI Automation 보조 확인 구조</h3>
+<p>Playwright DOM 검증이 timeout 또는 값 불일치로 실패하면, Windows UI Automation이 운영체제 접근성 API를 통해 브라우저 외부에서 동일한 값을 확인한다. 두 방식의 차이는 아래와 같다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th>DOM (Playwright)</th><th>UI Automation</th></tr></thead>
+  <tbody>
+    <tr><td>읽는 위치</td><td>브라우저 내부 JS 엔진</td><td>운영체제 접근성 API</td></tr>
+    <tr><td>속도</td><td>빠름</td><td>상대적으로 느림</td></tr>
+    <tr><td>셀렉터 변경 영향</td><td>받음</td><td>받지 않음</td></tr>
+    <tr><td>네이티브 앱 사용</td><td>불가</td><td>가능</td></tr>
+    <tr><td>사용 시점</td><td>항상 1순위</td><td>DOM 실패 시 보조 / 네이티브 앱 주력</td></tr>
+  </tbody>
+</table>
+
+<h3>검증 흐름 — 작업 유형별 전체 구조</h3>
+
+<div class="highlight-box">
+  <strong>웹 기반 작업</strong><br>
+  Playwright DOM Locator (1순위)
+  → 실패(timeout / 값 불일치) 시 UI Automation 브라우저 접근성 트리 확인 (2순위)
+  → 둘 다 실패 시 재시도 (최대 3회, retry_from 스텝부터 재실행)
+  → 재시도 전부 실패 시 execution_result 생성 → TTS로 사용자 안내 → fallback_action 실행 또는 종료
+</div>
+
+<div class="highlight-box">
+  <strong>네이티브 앱 작업</strong><br>
+  Windows UI Automation 창/컨트롤 탐색 (주력)
+  → 저장·생성 계열은 파일 시스템 존재 여부 확인 병행
+  → 실패 시 재시도 (최대 3회)
+  → 재시도 전부 실패 시 execution_result 생성 → TTS로 사용자 안내
+</div>
+
+<h3>네이티브 앱 검증 유형 정의</h3>
+<table>
+  <thead><tr><th style="width:28%">검증 유형</th><th style="width:32%">대상 예시</th><th>검증 방법</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>프로세스 / 창 존재 확인</td>
+      <td>메모장 실행, 계산기 실행</td>
+      <td>UI Automation으로 프로세스명 또는 창 제목 확인</td>
+    </tr>
+    <tr>
+      <td>UI 요소 값 읽기</td>
+      <td>텍스트 입력 결과, 계산기 연산 결과</td>
+      <td>UI Automation EditControl의 Value / Name 속성 읽기</td>
+    </tr>
+    <tr>
+      <td>파일 시스템 확인</td>
+      <td>파일 저장, 새 파일 생성</td>
+      <td>os.path.exists() 및 파일 수정 시각 확인</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Executor — 자동완성 처리 로직 및 페이지 로딩 대기 조건</h3>
+<p>자동완성이 포함된 입력 구간은 단순한 입력 action 하나로 처리할 수 없다. 입력 후 자동완성 드롭다운 로딩, 항목 선택, 값 반영까지의 구간을 명시적으로 세분화하여 Executor가 처리해야 한다. 아래 스텝은 입력값 설정 구간의 상대 순서이며, 실제 task_plan에서는 선행 스텝 번호에 이어서 부여된다.</p>
+
+<table>
+  <thead><tr><th style="width:8%">순서</th><th style="width:30%">action</th><th style="width:34%">설명</th><th>대기 조건</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>click_input</td>
+      <td>입력창 클릭</td>
+      <td>visible 상태 확인 후 클릭</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>fill_value</td>
+      <td>텍스트 입력</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>wait_for_autocomplete</td>
+      <td>자동완성 드롭다운 등장 대기</td>
+      <td>wait_for_selector() timeout 3000ms<br>미등장 시 press_enter fallback</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>select_autocomplete_item</td>
+      <td>자동완성 항목 선택 (후보 선택 전략 적용)</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>wait_for_reflect</td>
+      <td>입력값 UI 반영 대기</td>
+      <td>wait_for_timeout() 500ms</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>verify_value</td>
+      <td>입력값 검증</td>
+      <td>retry_from: 선행 fill_value 스텝</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>페이지 로딩 대기 조건은 구간마다 다르게 적용한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">구간</th><th style="width:40%">대기 방식</th><th>이유</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>유튜브 검색 결과</td>
+      <td>wait_for_selector("ytd-video-renderer")</td>
+      <td>결과 카드가 DOM에 생길 때까지 대기</td>
+    </tr>
+    <tr>
+      <td>네이버지도 진입</td>
+      <td>wait_for_load_state("networkidle")</td>
+      <td>지도 타일 및 초기 데이터 로딩 완료까지</td>
+    </tr>
+    <tr>
+      <td>자동완성 드롭다운</td>
+      <td>wait_for_selector(".autocomplete_item")</td>
+      <td>드롭다운 요소가 DOM에 등장할 때까지</td>
+    </tr>
+    <tr>
+      <td>자동완성 선택 후</td>
+      <td>wait_for_timeout(500)</td>
+      <td>입력값 UI 반영까지 짧게 대기</td>
+    </tr>
+    <tr>
+      <td>경로 결과 수집</td>
+      <td>wait_for_selector(".route_result")</td>
+      <td>경로 리스트가 DOM에 등장할 때까지</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>자동완성 후보 선택 전략</h3>
+<p>사용자의 입력과 완전히 일치하는 자동완성 항목이 없는 경우가 존재한다. 예를 들어 사용자가 "서울역"을 입력하면 자동완성에 "서울역 (공항철도)", "서울역 1호선", "서울역 4호선"과 같이 여러 후보가 나타난다. 이 경우 아래 단계적 전략을 순서대로 적용한다.</p>
+
+<table>
+  <thead><tr><th style="width:8%">순위</th><th style="width:24%">전략</th><th style="width:38%">적용 조건</th><th>예시</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1순위</td>
+      <td>완전 일치 항목 선택</td>
+      <td>자동완성 목록에 사용자 입력과 완전히 일치하는 항목이 있을 때</td>
+      <td>"서울역" → "서울역" 항목 바로 선택</td>
+    </tr>
+    <tr>
+      <td>2순위</td>
+      <td>슬롯 기반 규칙 매칭</td>
+      <td>완전 일치 없음. slots의 transport 등 정보로 후보를 필터링할 수 있을 때</td>
+      <td>transport=subway → "서울역 1호선" 우선 선택</td>
+    </tr>
+    <tr>
+      <td>3순위</td>
+      <td>LLM 판단</td>
+      <td>규칙 매칭도 불명확할 때. 후보 목록 전체를 LLM에 전달하여 사용자 의도에 가장 맞는 항목 선택</td>
+      <td>후보 목록 + 사용자 명령 + slots → LLM이 최적 항목 반환</td>
+    </tr>
+    <tr>
+      <td>4순위</td>
+      <td>사용자 선택 요청</td>
+      <td>LLM도 판단 불가할 때. 후보 목록을 TTS로 읽어주고 사용자가 직접 선택</td>
+      <td>"서울역 검색 결과가 여러 개예요. 1번 공항철도, 2번 1호선, 3번 4호선. 몇 번으로 할까요?"</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>자동완성 미등장 시 fallback:</strong> wait_for_autocomplete가 timeout되면 자동완성 없이 Enter 직접 입력을 시도한다. Enter 후에도 결과가 없으면 execution_result에 type: "autocomplete_not_found"로 기록하고 재시도 정책을 적용한다.
+</div>
+
+<h3>재시도 정책</h3>
+<p>재시도는 스텝 단위로 수행한다. 실패한 검증 스텝 전체를 처음부터 반복하는 것이 아니라, 해당 검증과 연관된 선행 스텝(retry_from)부터 재실행한다. 각 스텝의 최대 재시도 횟수는 3회로 제한한다.</p>
+
+<table>
+  <thead><tr><th style="width:30%">항목</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>재시도 단위</td><td>스텝 단위 (전체 작업 재시도 아님)</td></tr>
+    <tr><td>재시도 시작 지점</td><td>각 verify 스텝의 retry_from 필드에 정의된 스텝부터 재실행</td></tr>
+    <tr><td>최대 재시도 횟수</td><td>3회 (MAX_RETRY = 3)</td></tr>
+    <tr><td>3회 전부 실패 시</td><td>execution_result 생성 → Response Agent에 전달 → TTS로 사용자 안내 → fallback_action 실행 또는 종료</td></tr>
+    <tr><td>무한루프 방지</td><td>retry.count가 MAX_RETRY 도달 시 즉시 실패 처리. 재시도 중 추가 재시도 불허</td></tr>
+  </tbody>
+</table>
+
+<h3>execution_result JSON 스키마</h3>
+<p>Verifier Agent는 검증 결과를 아래 구조로 생성하며, Response Agent는 이를 기반으로 사용자 응답 및 TTS 안내를 생성한다.</p>
+
+<div class="json-block">{
+  "execution_result": {
+    "status": "success | failed | retrying",
+    "verification_source": "dom | uiautomation | filesystem",
+
+    "failed_step": null,
+    "failed_action": null,
+
+    "error": {
+      "type": "timeout | value_mismatch | element_not_found | autocomplete_not_found | page_load_failed | process_not_found | file_not_found | null",
+      "reason": null,
+      "actual_value": null
+    },
+
+    "retry": {
+      "count": 0,
+      "max": 3,
+      "retried_from_step": null
+    },
+
+    "response_hint": {
+      "fallback_action": "suggest_keyword_change | confirm_with_user | press_enter_fallback | null",
+      "user_message": null
+    }
+  }
+}</div>
+
+<p>실패 유형별 response_hint 적용 기준은 아래와 같다.</p>
+
+<table>
+  <thead><tr><th style="width:30%">error.type</th><th style="width:38%">user_message 방향</th><th>fallback_action</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>timeout</td>
+      <td>네트워크 또는 사이트 응답 문제 안내</td>
+      <td>press_enter_fallback</td>
+    </tr>
+    <tr>
+      <td>value_mismatch</td>
+      <td>actual_value를 읽어 사용자에게 현재 입력값 확인 요청</td>
+      <td>confirm_with_user</td>
+    </tr>
+    <tr>
+      <td>element_not_found</td>
+      <td>사이트 구조 변경 가능성 안내 후 재시도</td>
+      <td>null (재시도 후 종료)</td>
+    </tr>
+    <tr>
+      <td>autocomplete_not_found</td>
+      <td>검색어 수정 제안 또는 후보 목록 TTS 낭독</td>
+      <td>suggest_keyword_change</td>
+    </tr>
+    <tr>
+      <td>page_load_failed</td>
+      <td>네트워크 확인 또는 재시도 제안</td>
+      <td>null (재시도 후 종료)</td>
+    </tr>
+    <tr>
+      <td>process_not_found</td>
+      <td>앱 재실행 시도 안내</td>
+      <td>null (재실행 시도)</td>
+    </tr>
+    <tr>
+      <td>file_not_found</td>
+      <td>저장 경로 확인 제안</td>
+      <td>null (경로 확인 후 종료)</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>전체 흐름 요약:</strong>
+  Executor 실행 → Verifier 검증
+  → 성공: execution_result(status: success) → 다음 스텝 진행
+  → 실패: retry_from 스텝부터 재시도 (최대 3회)
+  → 3회 전부 실패: execution_result(status: failed) 생성
+  → error.type / actual_value / response_hint 채움
+  → Response Agent가 user_message를 TTS로 출력
+  → fallback_action 실행 또는 작업 종료
+</div>
+
+<p>민감 입력 영역 감지 및 보안 입력 모드에 대한 상세 정책은 
+<strong>22절 보안 정책</strong>에 정의되어 있다.</p>
+<!-- ===== 17 ===== -->
+<h2>17. 개발 로드맵</h2>
+<div class="roadmap-step"><div class="step-num">1</div><div class="step-content">백그라운드 프로그램 구조 구현 — 글로벌 단축키 감지, 메인 실행 감지, Windows 시작 자동 실행(BG-07)</div></div>
+<div class="roadmap-step"><div class="step-num">2</div><div class="step-content">메인 프로그램 UI 구현 — 상태 패널, 로그, 설정창, 입력창, 백그라운드 복구 기능(MAIN-15/16)</div></div>
+<div class="roadmap-step"><div class="step-num">3</div><div class="step-content">STT/TTS 연동 — gpt-4o-mini-transcribe 우선 통합, GCP TTS 연결</div></div>
+<div class="roadmap-step"><div class="step-num">4</div><div class="step-content">Playwright 기반 웹 자동화 구현 — 유튜브, 구글, 네이버지도 시나리오</div></div>
+<div class="roadmap-step"><div class="step-num">5</div><div class="step-content">Planner / Executor / Verifier / Response Agent 통합</div></div>
+<div class="roadmap-step"><div class="step-num">6</div><div class="step-content">whisper.cpp 병행 실험 및 비교 검증</div></div>
+<div class="roadmap-step"><div class="step-num">7</div><div class="step-content">보안 입력 모드 및 접근성 기능 강화</div></div>
+<div class="roadmap-step"><div class="step-num">8</div><div class="step-content">시나리오 기반 테스트와 안정화</div></div>
+
+
+<!-- ===== 18 ===== -->
+<h2>18. 최종 정의 및 결론</h2>
+<p>Voice Navigator는 백그라운드 호출 감지 프로그램과 메인 작업 수행 프로그램으로 구성된 이중 구조의 Windows 기반 음성 비서 시스템이다.</p>
+<p>본 시스템은 백그라운드 프로그램과 메인 프로그램으로 구성된 이중 구조를 가지며, 백그라운드 프로그램은 Windows 시작 시 자동 실행되어 호출 감지 기능을 지속적으로 유지한다. 또한 메인 프로그램은 실행 시 백그라운드 프로그램의 동작 여부를 확인하고, 실행 중이 아닐 경우 이를 자동으로 복구 실행함으로써 시스템의 연속성과 사용자 경험의 일관성을 보장한다.</p>
+
+<div class="summary-box">
+  <strong>최종 기술 스택 확정</strong><br>
+  <span class="tech-item">PySide6</span>
+  <span class="tech-item">Playwright</span>
+  <span class="tech-item">Windows UI Automation</span>
+  <span class="tech-item">GPT-4.1 mini</span>
+  <span class="tech-item">gpt-4o-mini-transcribe (주력)</span>
+  <span class="tech-item">whisper.cpp (병행 검토)</span>
+  <span class="tech-item">GCP Text-to-Speech</span>
+  <span class="tech-item">JSON</span><br><br>
+  이 조합은 초보 팀, 무지원금, 3~4개월 개발 기간, 발표 안정성이라는 조건에서 가장 현실적인 균형을 가진다.
+</div>
+<!-- ===== 19. 구현 기술 결정 사항 ===== -->
+<div class="page-break"></div>
+<h2>19. 구현 기술 결정 사항</h2>
+<p class="section-intro">본 섹션은 개발 착수 전 팀 전체가 합의한 기술 구현 방식을 정의한다. 개발 중 임의로 변경하지 않으며, 변경이 필요한 경우 팀 회의를 통해 재확정한다.</p>
+
+<h3>19.1 프로세스 간 통신 — TCP 소켓 (localhost)</h3>
+<p>백그라운드 프로그램과 메인 프로그램 간 메시지 전달은 TCP 소켓 통신(localhost:9000)을 사용한다. 메인 프로그램이 소켓 서버 역할을 하며, 백그라운드 프로그램이 클라이언트 역할을 한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>통신 방식</td><td>TCP 소켓 (localhost:9000)</td></tr>
+    <tr><td>서버 역할</td><td>메인 프로그램 — 시작 즉시 소켓 서버를 별도 스레드로 실행</td></tr>
+    <tr><td>클라이언트 역할</td><td>백그라운드 프로그램 — 메시지 전송 시 연결 시도</td></tr>
+    <tr><td>메인 미실행 시</td><td>백그라운드가 연결 실패를 감지 → subprocess.Popen()으로 메인 실행파일 실행 → 0.5초 간격으로 최대 10회 재연결 시도</td></tr>
+    <tr><td>메시지 포맷</td><td>JSON 문자열로 직렬화하여 전송</td></tr>
+    <tr><td>채택 이유</td><td>Python 표준 라이브러리 사용 가능, 예제 풍부, 초보 팀 구현 난이도 적합</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>소켓 서버 시작 시점:</strong> 메인 프로그램이 실행되는 즉시 소켓 서버를 별도 스레드(daemon=True)로 시작한다. 이렇게 해야 백그라운드의 재연결 시도가 성공할 수 있다.
+</div>
+
+<h3>19.2 STT 음성 수집 구조</h3>
+<p>사용자 음성을 수집하여 gpt-4o-mini-transcribe API에 전달하는 파이프라인을 정의한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>마이크 입력 라이브러리</td><td>sounddevice — 설치 간단, numpy 기반, Windows 호환성 양호</td></tr>
+    <tr><td>오디오 포맷</td><td>WAV (16kHz, 16-bit, 모노) — gpt-4o-mini-transcribe 공식 지원 포맷</td></tr>
+    <tr><td>샘플레이트</td><td>16000Hz — 사람 목소리 인식에 충분하며 API 비용 및 처리 속도 최적</td></tr>
+    <tr><td>수집 흐름</td><td>sounddevice로 녹음 → numpy 배열(int16) → WAV 바이트 변환 → API 전송</td></tr>
+  </tbody>
+</table>
+
+<h3>녹음 종료 방식 — 두 가지 방식 병행 검토</h3>
+<p>녹음 종료 방식은 아래 두 가지를 모두 구현 대상으로 검토한다. 1단계에서는 방식 B로 구현하고, 안정화 후 방식 C로 전환을 검토한다.</p>
+
+<table>
+  <thead><tr><th style="width:8%">방식</th><th style="width:25%">명칭</th><th style="width:37%">동작 방식</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>B</td>
+      <td>고정 시간 종료</td>
+      <td>녹음 시작 후 일정 시간(예: 5초) 경과 시 자동 종료</td>
+      <td>1단계 구현 대상. 구현 단순, 말이 길면 잘릴 수 있음</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>VAD 기반 자동 종료</td>
+      <td>무음 구간을 감지하여 말이 끝나면 자동 종료 (webrtcvad 라이브러리)</td>
+      <td>2단계 전환 검토 대상. 가장 자연스러운 UX, 구현 복잡도 있음</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>19.3 PySide6 + Playwright 비동기 구조</h3>
+<p>PySide6는 Qt 이벤트 루프를, Playwright 비동기 버전은 asyncio 이벤트 루프를 사용한다. 두 루프는 하나의 스레드에서 동시에 실행될 수 없으므로 반드시 스레드를 분리해야 한다. 이 구조는 개발 1단계에서 골격을 확정하며, 나중에 변경하면 전체 구조를 재작성해야 하므로 초반에 반드시 설계해둔다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">역할</th><th style="width:32%">담당 스레드</th><th>통신 방법</th></tr></thead>
+  <tbody>
+    <tr><td>Qt 이벤트 루프 (GUI 관리)</td><td>메인 스레드</td><td rowspan="2">작업 요청: queue.Queue / 결과 반환: PySide6 Signal</td></tr>
+    <tr><td>asyncio 이벤트 루프 (Playwright)</td><td>별도 스레드 (QThread 또는 threading.Thread)</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>Qt 이벤트 루프:</strong> Voice Navigator 창 안의 버튼 클릭, 텍스트 입력, 스크롤 등 메인 프로그램 창 내부 이벤트만 감지한다. 외부 브라우저나 다른 프로그램과는 무관하다. 이 루프가 멈추면 창이 응답 없음 상태가 된다.<br><br>
+  <strong>asyncio 이벤트 루프:</strong> Playwright의 브라우저 조작 중 발생하는 대기 구간(페이지 로딩, 요소 등장 등)을 효율적으로 관리한다. 메인 스레드와 독립된 스레드에서 실행되어 GUI가 굳지 않는다.
+</div>
+
+<h3>19.4 웨이크 워드 라이브러리 — openWakeWord</h3>
+<p>웨이크 워드 감지 라이브러리로 openWakeWord를 채택한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>채택 라이브러리</td><td>openWakeWord</td></tr>
+    <tr><td>채택 이유</td><td>완전 오픈소스로 라이선스 제약 없음. 공모전 출품 시에도 문제없음</td></tr>
+    <tr><td>동작 방식</td><td>16kHz PCM 오디오를 프레임 단위로 처리. VAD 모델 내장으로 비음성 노이즈 오탐 감소</td></tr>
+    <tr><td>오프라인 동작</td><td>완전 오프라인 가능 (인터넷 인증 불필요)</td></tr>
+    <tr><td>한국어 커스텀 워드</td><td>커스텀 워드 학습 가능. 학습 데이터 준비 필요</td></tr>
+    <tr><td>pvporcupine 미채택 이유</td><td>무료 플랜이 비상업적 개인 프로젝트 전용이며, 공모전 출품이 상업적 이익 추구로 해석될 수 있어 라이선스 회색지대에 해당함</td></tr>
+  </tbody>
+</table>
+
+<h3>19.5 Planner Agent — intent enum 및 프롬프트 설계</h3>
+<p>Planner Agent는 사용자의 자연어 명령을 구조화된 JSON으로 변환한다. 아래 intent 목록과 시스템 프롬프트 구조를 기준으로 구현한다.</p>
+
+<h3>intent enum 정의</h3>
+<table>
+  <thead><tr><th style="width:20%">분류</th><th style="width:35%">intent 값</th><th>설명</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="5">웹 기반</td><td>youtube_search</td><td>유튜브 영상 검색</td></tr>
+    <tr><td>naver_map_route</td><td>네이버지도 경로 탐색</td></tr>
+    <tr><td>google_search</td><td>구글 검색</td></tr>
+    <tr><td>naver_search</td><td>네이버 검색</td></tr>
+    <tr><td>web_open_url</td><td>특정 URL 직접 열기</td></tr>
+    <tr><td rowspan="5">Windows 기본 앱</td><td>notepad_write</td><td>메모장 실행 및 텍스트 입력</td></tr>
+    <tr><td>calculator_compute</td><td>계산기 연산</td></tr>
+    <tr><td>explorer_open</td><td>파일 탐색기 열기 및 탐색</td></tr>
+    <tr><td>settings_open</td><td>Windows 설정 열기</td></tr>
+    <tr><td>task_manager_open</td><td>작업 관리자 열기</td></tr>
+    <tr><td rowspan="3">브라우저 제어</td><td>browser_open</td><td>브라우저 실행 (Chrome / Edge / Firefox)</td></tr>
+    <tr><td>browser_new_tab</td><td>새 탭 열기</td></tr>
+    <tr><td>browser_close_tab</td><td>현재 탭 닫기</td></tr>
+    <tr><td rowspan="2">써드파티 앱</td><td>kakao_send_message</td><td>카카오톡 메시지 전송 (테스트 후 확정)</td></tr>
+    <tr><td>kakao_open_chat</td><td>카카오톡 특정 채팅방 열기 (테스트 후 확정)</td></tr>
+    <tr><td rowspan="4">시스템 제어</td><td>volume_control</td><td>볼륨 조절</td></tr>
+    <tr><td>app_open</td><td>범용 앱 실행 (app_name 슬롯으로 처리)</td></tr>
+    <tr><td>app_close</td><td>앱 종료</td></tr>
+    <tr><td>open_window</td><td>Voice Navigator 메인 창 열기</td></tr>
+    <tr><td rowspan="8">화면 읽기 / 분석</td><td>screen_read_web</td><td>현재 웹 페이지 본문 텍스트 읽기. 헤더·푸터 제외, 본문 자동 추출</td></tr>
+    <tr><td>screen_summarize</td><td>현재 웹 페이지 본문을 LLM으로 요약하여 TTS 출력</td></tr>
+    <tr><td>screen_read_app</td><td>현재 활성 Windows 앱 화면의 텍스트 읽기 (UI Automation)</td></tr>
+    <tr><td>screen_read_chat</td><td>채팅 앱(카카오톡 등) 현재 채팅방 메시지 읽기</td></tr>
+    <tr><td>screen_read_chat_list</td><td>채팅 앱 채팅방 목록 읽기</td></tr>
+    <tr><td>screen_read_stop</td><td>읽기 즉시 중단. Planner 우회하여 즉시 처리</td></tr>
+    <tr><td>screen_read_next</td><td>다음 섹션으로 이동하여 계속 읽기</td></tr>
+    <tr><td>screen_read_restart</td><td>처음 섹션부터 다시 읽기</td></tr>
+    <tr><td>처리 불가</td><td>unsupported</td><td>지원 범위 밖 명령 — Response Agent가 TTS로 안내 후 종료</td></tr>
+  </tbody>
+</table>
+
+<h3>Planner 시스템 프롬프트 구조</h3>
+<p>Planner Agent는 아래 시스템 프롬프트를 기반으로 동작하며, JSON 외 어떤 텍스트도 출력하지 않도록 강제한다.</p>
+
+<div class="json-block">{
+  "system_prompt": "너는 Voice Navigator의 Planner Agent다. 사용자의 자연어 명령을 분석하여 반드시 아래 JSON 형식으로만 응답한다. JSON 외 어떤 텍스트도 출력하지 않는다.",
+
+  "response_schema": {
+    "status": "complete | incomplete_slots | unsupported",
+    "intent": "<intent enum 중 하나>",
+    "platform": "<대상 플랫폼>",
+    "browser": "chrome | edge | firefox | default",
+    "slots": {"<슬롯명>": "<값 또는 null>"},
+    "missing_slots": ["<누락된 슬롯명>"],
+    "goal": "<목표 문장>",
+    "close_tab_after": "true | false | null",
+    "task_plan": []
+  },
+
+  "rules": [
+    "status가 incomplete_slots이면 task_plan은 빈 배열로 반환한다",
+    "필수 슬롯이 누락된 경우 missing_slots에 해당 슬롯명을 넣는다",
+    "지원하지 않는 명령이면 status를 unsupported로 설정한다",
+    "browser가 명시되지 않으면 default로 설정한다",
+    "intent는 반드시 정의된 enum 목록 중 하나여야 한다"
+  ]
+}</div>
+
+<h3>슬롯 불완전 처리 흐름</h3>
+<p>필수 슬롯이 누락된 경우 Planner는 task_plan을 생성하지 않고 missing_slots를 반환한다. Response Agent는 이를 받아 TTS로 누락된 정보를 사용자에게 되묻고, 답변을 받아 슬롯을 보완한 뒤 Planner를 재호출한다.</p>
+
+<div class="highlight-box">
+  <strong>흐름 예시:</strong>
+  사용자: "서울역에서 지하철 경로 찾아줘"
+  → Planner: status="incomplete_slots", missing_slots=["destination"]
+  → Response Agent TTS: "어디까지 가실 건가요?"
+  → 사용자: "인천대공원역"
+  → 슬롯 보완 후 Planner 재호출
+  → status="complete" → task_plan 생성 → Executor 실행
+</div>
+
+<h3>19.6 브라우저 세션 관리 정책</h3>
+<p>Playwright 브라우저 세션은 명령마다 새 탭(browser.new_page())을 여는 방식을 기본으로 한다. 브라우저 인스턴스는 프로그램 시작 시 한 번만 실행하고 유지한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>브라우저 인스턴스</td><td>프로그램 시작 시 한 번 실행, 이후 유지</td></tr>
+    <tr><td>명령당 세션</td><td>새 탭(browser.new_page()) 생성 — 빠른 실행, 이전 상태와 격리</td></tr>
+    <tr><td>멀티 브라우저 지원</td><td>슬롯의 browser 필드로 Chrome / Edge / Firefox 지정 가능</td></tr>
+    <tr><td>Edge 실행 방법</td><td>chromium.launch(channel="msedge") — Chromium 기반이라 별도 드라이버 불필요</td></tr>
+    <tr><td>PWA 처리</td><td>Playwright로 URL 직접 접근. 설치된 PWA도 내부가 웹 기술이므로 DOM 제어 가능</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>탭 닫기 시점 — 미확정 (추후 결정 필요)</strong><br>
+  고려 요소:<br>
+  · 명령 완료 후 연속 명령 가능성 (예: 경로 탐색 후 카카오톡으로 공유)<br>
+  · 결과를 다른 앱(카카오톡, 메모장)으로 전달하는 흐름에서 탭 유지 필요<br>
+  · 사용자가 명시적으로 "닫아줘" 하는 경우<br>
+  · 새 명령이 들어왔을 때 기존 탭 처리 방법<br>
+  결정 시점: 4단계 Playwright 웹 자동화 구현 시점에 팀 회의로 확정
+</div>
+
+<h3>19.7 네이티브 앱 지원 범위</h3>
+<table>
+  <thead><tr><th style="width:20%">분류</th><th style="width:30%">앱</th><th style="width:20%">발표 포함</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td rowspan="4">발표 범위 확정</td><td>메모장</td><td>✅ 확정</td><td>UI Automation 지원 완벽</td></tr>
+    <tr><td>계산기</td><td>✅ 확정</td><td>UI Automation 지원 완벽</td></tr>
+    <tr><td>파일 탐색기</td><td>✅ 확정</td><td>UI Automation 지원 양호</td></tr>
+    <tr><td>볼륨 조절</td><td>✅ 확정</td><td>Windows API 직접 호출 가능</td></tr>
+    <tr><td rowspan="2">조건부 포함</td><td>카카오톡</td><td>⚠️ 테스트 후 결정</td><td>개발 초기 UI Automation Inspector(inspect.exe)로 접근성 트리 노출 여부 직접 확인 필요. 팀 내 별도 회의 필요</td></tr>
+    <tr><td>기타 써드파티 앱</td><td>⚠️ 개별 확인</td><td>앱마다 접근성 지원 수준이 달라 개별 테스트 필요</td></tr>
+    <tr><td rowspan="2">발표 범위 제외</td><td>게임 / 보안 프로그램</td><td>❌ 제외</td><td>접근성 API를 차단하는 경우가 많음</td></tr>
+    <tr><td>Electron 기반 앱</td><td>❌ 제외</td><td>DOM과 UI Automation 중 접근 방식 판단이 복잡함</td></tr>
+  </tbody>
+</table>
+
+<h3>19.8 네이티브 앱 추가 시나리오</h3>
+
+<div class="scenario-box">
+  <div class="scenario-header">시나리오 C — 메모장에 텍스트 입력</div>
+  <div class="scenario-body">
+    <div class="scenario-cmd">사용자 명령: "메모장 열어서 오늘 할 일 목록 적어줘. 내용은 운동, 공부, 장보기야"</div>
+    메모장 실행 확인 → notepad.exe 실행 → 창 활성화 검증
+    → 텍스트 입력 → UI Automation EditControl Value 검증
+    → 결과 TTS 안내: <strong>"메모장에 입력을 완료했어요."</strong>
+  </div>
+</div>
+
+<div class="scenario-box">
+  <div class="scenario-header">시나리오 D — 계산기 연산</div>
+  <div class="scenario-body">
+    <div class="scenario-cmd">사용자 명령: "계산기로 1234 곱하기 5678 계산해줘"</div>
+    계산기 실행 확인 → 숫자 및 연산자 입력 → 결과 화면 확인
+    → UI Automation으로 결과값 읽기
+    → 결과 TTS 안내: <strong>"1234 곱하기 5678은 7,006,652예요."</strong>
+  </div>
+</div>
+
+
+<!-- ===== 20. 개발 준비 사항 및 팀 규칙 ===== -->
+<h2>20. 개발 준비 사항 및 팀 규칙</h2>
+<p class="section-intro">개발 착수 전 팀 전체가 반드시 완료해야 하는 준비 사항과 개발 기간 내내 지켜야 할 규칙을 정의한다.</p>
+
+<h3>20.1 API 키 관리 규칙</h3>
+<p>API 키는 코드에 직접 작성하지 않으며, 반드시 .env 파일로 관리한다. GitHub에 키가 한 번이라도 올라가면 커밋 히스토리에 영구적으로 남으므로 즉시 해당 키를 폐기하고 재발급해야 한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">규칙</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>키 저장 위치</td><td>프로젝트 루트의 .env 파일</td></tr>
+    <tr><td>코드에서 로드 방법</td><td>python-dotenv 라이브러리 사용 (from dotenv import load_dotenv)</td></tr>
+    <tr><td>.gitignore 필수 항목</td><td>.env / *.json (GCP 서비스 계정 키) / credentials/</td></tr>
+    <tr><td>레포 생성 직후 첫 번째 작업</td><td>.gitignore 파일 생성 및 위 항목 등록</td></tr>
+    <tr><td>키 유출 시 즉시 조치</td><td>해당 키 폐기 → 재발급 → git history 정리</td></tr>
+  </tbody>
+</table>
+
+<h3>20.2 개발 로드맵 (일정 포함)</h3>
+<table>
+  <thead><tr><th style="width:8%">단계</th><th style="width:42%">내용</th><th>기간</th></tr></thead>
+  <tbody>
+    <tr><td>1단계</td><td>환경 세팅 / API 키 관리 / 소켓 통신 구조 / 백그라운드 프로그램 (BG-01~07) / PySide6+Playwright 스레드 구조 골격</td><td>4월 (4주)</td></tr>
+    <tr><td>2단계</td><td>메인 프로그램 UI / 소켓 연동 / 상태 흐름 구현 / 백그라운드 복구 기능 (MAIN-15/16)</td><td>5월 (4주)</td></tr>
+    <tr><td>3단계</td><td>STT/TTS 연동 / sounddevice 마이크 수집 / 고정 시간 녹음 종료 (방식 B) / GCP TTS 연결</td><td>6월 (4주)</td></tr>
+    <tr><td>4단계</td><td>Playwright 웹 자동화 — 유튜브, 네이버지도, 구글 시나리오 / 탭 닫기 시점 정책 확정</td><td>7월 (4주)</td></tr>
+    <tr><td>4-1단계</td><td>네이티브 앱 자동화 — 메모장, 계산기, 파일탐색기, 볼륨 / 카카오톡 접근성 트리 테스트</td><td>7월 후반~8월 초 (2주)</td></tr>
+    <tr><td>5단계</td><td>Agent 전체 통합 / Planner 프롬프트 튜닝 / 슬롯 불완전 처리 / intent enum 검증</td><td>8월 (4주)</td></tr>
+    <tr><td>6단계</td><td>whisper.cpp 실험 / VAD 녹음 종료 전환 검토 (방식 C) / Verifier 안정화 / 보안 모드</td><td>9월 (4주)</td></tr>
+    <tr><td>7단계</td><td>시나리오 전체 테스트 / 발표 데모 준비 / 셀렉터 안정성 확인 / 데모 영상 백업 녹화</td><td>10월 (4주)</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>일정 주의사항:</strong> 5단계 Agent 통합이 지연될 경우 6~7단계가 압박받는다. whisper.cpp 전환은 발표 안정성이 확보된 이후에만 진행하며, 안정화되지 않으면 gpt-4o-mini-transcribe를 유지한다.
+</div>
+
+<h3>20.3 발표 데모 안정성 체크리스트</h3>
+<p>발표 전날 반드시 아래 항목을 전체 확인한다.</p>
+
+<table>
+  <thead><tr><th style="width:8%">순서</th><th style="width:42%">확인 항목</th><th>비고</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>유튜브 / 네이버지도 셀렉터 동작 여부 확인</td><td>사이트 업데이트로 셀렉터가 변경됐을 수 있음</td></tr>
+    <tr><td>2</td><td>OpenAI API 크레딧 잔액 확인</td><td>STT + LLM 호출 비용</td></tr>
+    <tr><td>3</td><td>GCP TTS 크레딧 잔액 확인</td><td>무료 크레딧 소진 여부</td></tr>
+    <tr><td>4</td><td>마이크 입력 정상 동작 확인</td><td>발표 장소 마이크 환경 사전 점검</td></tr>
+    <tr><td>5</td><td>시나리오 A~D 전체 1회 이상 실행 확인</td><td>유튜브, 네이버지도, 메모장, 계산기</td></tr>
+    <tr><td>6</td><td>데모 영상 백업 준비</td><td>네트워크 불안정 또는 API 지연 대비. 시나리오별 정상 동작 영상 사전 녹화 필수</td></tr>
+  </tbody>
+</table>
+
+
+<!-- ===== 21. 미결 사항 ===== -->
+<h2>21. 미결 사항</h2>
+<p class="section-intro">아직 확정되지 않은 항목을 정리한다. 각 항목은 정의된 결정 시점에 팀 회의를 통해 확정하고 기획서에 반영한다.</p>
+
+<table>
+  <thead><tr><th style="width:5%">번호</th><th style="width:28%">미결 항목</th><th style="width:37%">고려 요소</th><th>결정 시점</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>탭 닫기 시점 정책</td>
+      <td>
+        · 명령 완료 후 연속 명령 가능성<br>
+        · 결과를 카카오톡·메모장으로 전달하는 흐름에서 탭 유지 필요<br>
+        · 사용자 명시적 "닫아줘" 명령 처리<br>
+        · 새 명령 시 기존 탭 처리 방법
+      </td>
+      <td>4단계 Playwright 구현 시점</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>카카오톡 UI Automation 지원 여부</td>
+      <td>
+        · inspect.exe로 접근성 트리 노출 여부 직접 확인 필요<br>
+        · 채팅방 목록, 입력창 탐색 가능 여부<br>
+        · 보안 처리된 영역 제한 가능성
+      </td>
+      <td>4-1단계 네이티브 앱 구현 시점</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>VAD 기반 녹음 종료 전환 여부 (방식 C)</td>
+      <td>
+        · webrtcvad 라이브러리 안정성<br>
+        · 방식 B 대비 UX 개선 체감 정도<br>
+        · 구현 및 튜닝 시간 여유
+      </td>
+      <td>6단계 안정화 시점</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>openWakeWord 한국어 커스텀 워드 학습</td>
+      <td>
+        · "보이스 네비게이터" 학습 데이터 수집 방법<br>
+        · 학습 정확도 검증 방법<br>
+        · 학습 시간 및 팀 내 ML 역량
+      </td>
+      <td>1단계 백그라운드 구현 시점</td>
+    </tr>
+    <tr>
+  <td>5</td>
+  <td>카카오톡 채팅 읽기 접근성 트리 미노출 시 fallback</td>
+  <td>
+    · UI Automation으로 채팅 메시지 추출 실패 시 대안 필요<br>
+    · 이미지 설명 기능 배제로 스크린샷 기반 처리 불가<br>
+    · 접근성 트리 노출 여부에 따라 지원 범위 재결정 필요
+  </td>
+  <td>4-1단계 카카오톡 테스트 시점</td>
+</tr>
+  </tbody>
+</table>
+<!-- ===== 22. 보안 정책 ===== -->
+<h2>22. 보안 정책</h2>
+<p class="section-intro">Voice Navigator는 사용자의 민감 정보가 시스템을 통해 노출되거나 외부로 전송되는 것을 방지하기 위해 아래 보안 정책을 정의한다. 이 정책은 설계 원칙 4항(접근성과 보안을 동시에 고려)의 구체적 구현 기준이다.</p>
+
+<h3>22.1 Voice Navigator의 로그인 직접 수행 — 기능 제외</h3>
+<p>Voice Navigator는 사용자의 아이디 및 비밀번호를 직접 입력하는 로그인 자동화 기능을 제공하지 않는다. 이유는 아래와 같다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">방법</th><th style="width:36%">문제점</th><th>판단</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>비밀번호를 로컬에 저장</td>
+      <td>암호화 없이 저장 시 보안 사고 위험. 암호화해도 키 관리 문제 발생. 학생 팀이 안전하게 구현하기 어려움</td>
+      <td>❌ 채택 불가</td>
+    </tr>
+    <tr>
+      <td>음성으로 비밀번호 수신</td>
+      <td>STT API 전송 과정에서 외부 서버(OpenAI)에 비밀번호 노출. 절대 허용 불가</td>
+      <td>❌ 채택 불가</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>대신 아래 흐름으로 안내한다:</strong><br>
+  사용자: "유튜브 로그인해줘"<br>
+  TTS 응답: "로그인은 보안상 직접 입력해 주세요. 로그인 후 다시 말씀해 주시면 이어서 도와드릴게요."
+</div>
+
+<h3>22.2 보안 입력 모드 — 비밀번호 필드 감지 시 동작</h3>
+<p>Windows UI Automation을 통해 현재 포커스된 입력창이 비밀번호 필드인지 감지한다. 감지 즉시 보안 입력 모드를 활성화하며, 아래 동작을 수행한다.</p>
+
+<table>
+  <thead><tr><th style="width:8%">순서</th><th style="width:30%">동작</th><th>이유</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>①</td>
+      <td>TTS 안내 음성 출력</td>
+      <td>"비밀번호 입력 영역이 감지되었습니다. 개인정보 보호를 위해 직접 입력해 주세요." 출력 완료 후 다음 단계로 진행</td>
+    </tr>
+    <tr>
+      <td>②</td>
+      <td>TTS 이후 출력 중단</td>
+      <td>안내 음성 출력 이후 추가적인 화면 내용 낭독을 차단하여 주변 노출 방지</td>
+    </tr>
+    <tr>
+      <td>③</td>
+      <td>STT 음성 수집 중단</td>
+      <td>음성이 외부 API 서버로 전송되지 않도록 차단</td>
+    </tr>
+    <tr>
+      <td>④</td>
+      <td>로그 기록 중단</td>
+      <td>해당 구간의 내용이 로그 파일에 저장되지 않도록 차단</td>
+    </tr>
+    <tr>
+      <td>⑤</td>
+      <td>토스트 팝업 알림</td>
+      <td>화면 우측 하단에 "보안 입력 모드 활성화됨" 표시</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>보안 입력 모드 감지 및 해제 조건</h3>
+<table>
+  <thead><tr><th style="width:28%">구분</th><th>조건</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>활성화 조건</td>
+      <td>UI Automation으로 포커스된 EditControl의 IsPassword 속성이 true이거나, 컨트롤 Name에 "password" 관련 키워드가 포함된 경우</td>
+    </tr>
+    <tr>
+      <td>해제 조건</td>
+      <td>포커스가 비밀번호 필드에서 벗어날 때 / 사용자가 "보안 모드 해제" 명령을 할 때 / 메인 프로그램이 Ready 상태로 복귀할 때</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>22.3 민감 콘텐츠 도메인 — 주의 안내</h3>
+<p>비밀번호 필드 외에도 메일함, 금융 서비스 등 민감한 콘텐츠가 포함된 도메인에 진입할 경우 사용자에게 주의를 안내한 뒤 작업을 진행한다. 자동으로 콘텐츠를 읽지 않으며, 사용자의 명시적 요청이 있을 때만 읽기를 수행한다.</p>
+
+<table>
+  <thead><tr><th style="width:35%">민감 도메인 예시</th><th style="width:30%">진입 시 동작</th><th>콘텐츠 읽기 조건</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>mail.google.com / mail.naver.com</td>
+      <td>TTS: "민감한 정보가 포함될 수 있어요. 주변을 확인 후 진행해 주세요." 안내 후 대기</td>
+      <td>사용자가 명시적으로 "읽어줘" 요청 시에만 읽기 수행</td>
+    </tr>
+    <tr><td>금융 / 뱅킹 관련 도메인</td><td></td><td></td></tr>
+    <tr><td>카카오톡 등 메시지 앱</td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>22.4 보안 정책 3단계 요약</h3>
+<table>
+  <thead><tr><th style="width:8%">단계</th><th style="width:20%">상황</th><th style="width:36%">동작</th><th>해당 기능 ID</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>🔴 완전 차단</td>
+      <td>비밀번호 입력창 감지</td>
+      <td>TTS · STT · 로그 전부 중단. 토스트 팝업으로 "보안 입력 모드 활성화됨" 알림</td>
+      <td>MAIN-10, MAIN-12</td>
+    </tr>
+    <tr>
+      <td>🟡 주의 안내</td>
+      <td>민감 콘텐츠 도메인 진입</td>
+      <td>"주변을 확인해 주세요" TTS 안내 후 사용자 명시적 요청 시에만 진행</td>
+      <td>MAIN-05, MAIN-11</td>
+    </tr>
+    <tr>
+      <td>🟢 정상 동작</td>
+      <td>일반 작업</td>
+      <td>정상 동작</td>
+      <td>전체</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>로그인 자동화 범위 제외 원칙:</strong>
+  Voice Navigator는 사용자의 인증 정보(아이디, 비밀번호, 인증 코드, 금융 정보)를 저장하거나 음성으로 수신하거나 외부로 전송하는 기능을 일체 제공하지 않는다.
+  사용자가 직접 로그인한 이후의 작업만 Voice Navigator가 수행하며, 로그인 요청 시 위 안내 문구를 TTS로 출력하고 작업을 종료한다.
+</div>
+<!-- ===== 23. 화면 읽기 기능 상세 정의 ===== -->
+<h2>23. 화면 읽기 기능 상세 정의</h2>
+<p class="section-intro">Voice Navigator의 화면 읽기 기능은 텍스트 기반으로만 동작한다. 이미지 설명 기능은 본 프로젝트 범위에서 배제한다. 웹 페이지, Windows 기본 앱, 써드파티 앱(카카오톡 등) 화면의 텍스트를 추출하여 TTS로 안내하는 것을 목표로 한다.</p>
+
+<h3>23.1 기능 범위 확정</h3>
+<table>
+  <thead><tr><th style="width:28%">기능</th><th style="width:22%">대상</th><th style="width:22%">추출 방식</th><th>LLM 사용</th></tr></thead>
+  <tbody>
+    <tr><td>웹 본문 읽기</td><td>웹 페이지</td><td>DOM 규칙 기반 → LLM fallback</td><td>규칙 실패 시만</td></tr>
+    <tr><td>웹 페이지 요약</td><td>웹 페이지</td><td>DOM 본문 추출</td><td>✅ 항상</td></tr>
+    <tr><td>앱 화면 읽기</td><td>Windows 기본 앱</td><td>UI Automation</td><td>❌</td></tr>
+    <tr><td>채팅 읽기</td><td>카카오톡 등 써드파티</td><td>UI Automation (접근성 트리)</td><td>❌</td></tr>
+    <tr><td>읽기 제어</td><td>전체</td><td>키워드 즉시 처리 (Planner 우회)</td><td>❌</td></tr>
+    <tr><td>이미지 설명</td><td>—</td><td colspan="2">❌ 배제 — 본 프로젝트 범위 외</td></tr>
+  </tbody>
+</table>
+
+<h3>23.2 웹 페이지 본문 추출 전략</h3>
+<p>웹 페이지마다 본문 구조가 달라 단일 셀렉터로 처리할 수 없다. 아래 2단계 전략을 순서대로 적용한다.</p>
+
+<table>
+  <thead><tr><th style="width:8%">단계</th><th style="width:22%">방식</th><th style="width:38%">동작</th><th>적용 조건</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1단계</td>
+      <td>규칙 기반 추출</td>
+      <td>article, main, [role=main], .content 등 본문 관련 셀렉터 순서대로 시도. header, footer, nav, script, style 등 제거</td>
+      <td>항상 먼저 시도</td>
+    </tr>
+    <tr>
+      <td>2단계</td>
+      <td>LLM 판단 fallback</td>
+      <td>규칙 기반 추출 결과가 비어있거나 너무 짧을 때 페이지 전체 텍스트를 LLM에 전달하여 주요 내용 추출 요청</td>
+      <td>1단계 결과 불충분 시</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>본문 추출 우선순위 셀렉터:</strong>
+  article → main → [role="main"] → .content → .post-body → #content → body (최후 수단)<br>
+  <strong>제거 대상:</strong> header, footer, nav, aside, .advertisement, .sidebar, script, style
+</div>
+
+<h3>23.3 웹 페이지 요약</h3>
+<p>사용자가 "요약해줘", "이 페이지 요약해줘" 명령 시 동작한다. 본문 추출 후 GPT-4.1 mini로 요약하여 TTS 출력한다. 페이지 텍스트가 토큰 한계를 초과하는 경우 본문 관련 태그(h1~h3, p, article)만 추출하여 전송한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>텍스트 추출</td><td>23.2절 본문 추출 전략과 동일하게 적용</td></tr>
+    <tr><td>LLM 프롬프트</td><td>"아래 내용을 핵심만 3줄로 요약해줘. 한국어로 답해."</td></tr>
+    <tr><td>토큰 초과 시</td><td>h1~h3, p, article 태그 텍스트만 추출하여 전송</td></tr>
+    <tr><td>TTS 출력</td><td>LLM 응답을 그대로 음성 출력</td></tr>
+  </tbody>
+</table>
+
+<h3>23.4 읽기 중 제어 명령어</h3>
+<p>Reading 상태에서는 아래 키워드를 STT 변환 직후 Planner 호출 없이 즉시 처리한다. 일반 명령 처리 파이프라인을 우회하여 응답 지연을 최소화한다.</p>
+
+<table>
+  <thead><tr><th style="width:22%">키워드 예시</th><th style="width:22%">intent</th><th style="width:28%">동작</th><th>상태 변화</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>"멈춰", "멈춰줘", "그만"</td>
+      <td>screen_read_stop</td>
+      <td>TTS 즉시 중단</td>
+      <td>Reading → Ready</td>
+    </tr>
+    <tr>
+      <td>"다음", "다음 문단"</td>
+      <td>screen_read_next</td>
+      <td>현재 섹션 중단 → 다음 섹션 읽기 시작</td>
+      <td>Reading 유지</td>
+    </tr>
+    <tr>
+      <td>"처음부터", "처음으로"</td>
+      <td>screen_read_restart</td>
+      <td>첫 번째 섹션부터 다시 읽기</td>
+      <td>Reading 유지</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>23.5 섹션 단위 읽기 구조</h3>
+<p>"다음"과 "처음부터" 명령을 지원하려면 추출된 텍스트를 섹션 단위로 분할하여 인덱스로 관리해야 한다. 섹션은 h1~h3, p 태그 단위로 분할하며, 현재 섹션 인덱스를 메인 프로그램 내부 상태로 유지한다.</p>
+
+<table>
+  <thead><tr><th style="width:28%">항목</th><th>내용</th></tr></thead>
+  <tbody>
+    <tr><td>섹션 분할 기준</td><td>h1, h2, h3, p 태그 단위로 분할. 빈 텍스트 제외</td></tr>
+    <tr><td>섹션 인덱스 관리</td><td>current_section 변수로 현재 위치 추적</td></tr>
+    <tr><td>"다음" 처리</td><td>current_section += 1 → 해당 섹션 TTS 출력</td></tr>
+    <tr><td>"처음부터" 처리</td><td>current_section = 0 → 첫 섹션부터 TTS 출력</td></tr>
+    <tr><td>마지막 섹션 완료 시</td><td>TTS: "읽기가 완료됐어요." → Ready 상태 복귀</td></tr>
+  </tbody>
+</table>
+
+<h3>23.6 Windows 앱 / 써드파티 앱 화면 읽기</h3>
+<p>웹이 아닌 네이티브 앱의 화면 읽기는 UI Automation을 통해 현재 활성 창의 텍스트 요소를 탐색하여 추출한다.</p>
+
+<table>
+  <thead><tr><th style="width:20%">대상</th><th style="width:30%">추출 방식</th><th style="width:28%">추출 요소</th><th>fallback</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Windows 기본 앱 (메모장, 파일탐색기 등)</td>
+      <td>UI Automation 현재 창 탐색</td>
+      <td>TextControl, EditControl의 Name / Value 속성</td>
+      <td>없음 (안정적)</td>
+    </tr>
+    <tr>
+      <td>카카오톡 채팅방 메시지</td>
+      <td>UI Automation 접근성 트리 탐색</td>
+      <td>메시지 버블 텍스트, 발신자 이름</td>
+      <td>접근성 트리 미노출 시 → 미결 사항 5번으로 분기</td>
+    </tr>
+    <tr>
+      <td>카카오톡 채팅방 목록</td>
+      <td>UI Automation 접근성 트리 탐색</td>
+      <td>채팅방 이름, 마지막 메시지 텍스트</td>
+      <td>접근성 트리 미노출 시 → 미결 사항 5번으로 분기</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight-box">
+  <strong>카카오톡 지원 가능 여부:</strong> 개발 4-1단계에서 inspect.exe(UI Automation Inspector)로 카카오톡 창의 접근성 트리 노출 여부를 직접 확인한다. 접근성 트리가 충분히 노출되면 채팅 읽기 기능을 구현하고, 미노출 시 미결 사항 5번 기준으로 팀 회의 후 지원 여부를 재결정한다.
+</div>
+
+<h3>23.7 화면 읽기 관련 시나리오</h3>
+
+<div class="scenario-box">
+  <div class="scenario-header">시나리오 E — 뉴스 기사 본문 읽기</div>
+  <div class="scenario-body">
+    <div class="scenario-cmd">사용자 명령: "이 페이지 읽어줘"</div>
+    현재 페이지 URL 확인 → DOM 규칙 기반 본문 추출 → 섹션 단위 분할 → 첫 섹션부터 TTS 낭독 → Reading 상태 유지<br><br>
+    읽기 중 "다음" → 다음 섹션으로 이동<br>
+    읽기 중 "멈춰" → TTS 중단 → Ready 복귀<br>
+    마지막 섹션 완료 → <strong>"읽기가 완료됐어요."</strong> → Ready 복귀
+  </div>
+</div>
+
+<div class="scenario-box">
+  <div class="scenario-header">시나리오 F — 웹 페이지 요약</div>
+  <div class="scenario-body">
+    <div class="scenario-cmd">사용자 명령: "이 페이지 요약해줘"</div>
+    현재 페이지 본문 추출 → 토큰 범위 확인 → GPT-4.1 mini로 3줄 요약 → TTS 출력 → Ready 복귀
+  </div>
+</div>
+
+<div class="scenario-box">
+  <div class="scenario-header">시나리오 G — 로그인 페이지 읽기 (본문 개념 없는 페이지)</div>
+  <div class="scenario-body">
+    <div class="scenario-cmd">사용자 명령: "이 페이지 읽어줘"</div>
+    규칙 기반 추출 시도 → 결과 불충분 → LLM fallback으로 페이지 주요 텍스트 추출 → TTS 출력<br><br>
+    <em>예: "아이디와 비밀번호를 입력하는 로그인 화면입니다." 안내 후 보안 입력 모드 활성화</em>
+  </div>
+</div>
+</body>
+</html>
